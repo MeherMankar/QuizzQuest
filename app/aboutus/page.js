@@ -5,7 +5,7 @@ import NavBar from "../components/NavBar"
 const founders = [
   {
     name: "Prajakta Anna Wankhade ",
-    role: "Founder",
+    // role: "Founder",
     email: "prajktawankhade22@gmail.com",
     phone: "+91 8180969350",
     description: "An MCA student at Prof. Ram Meghe Institute of Technology & Research with a strong passion for technology and education.",
@@ -14,7 +14,7 @@ const founders = [
   },
   {
     name: "Chaitali Satish Bobade",
-    role: "Co-founder",
+    // role: "Co-founder",
     email: "chaitalibobade3@gmail.com",
     phone: "+91 9209263975",
     description: "An MCA student at Prof. Ram Meghe Institute of Technology & Research, dedicated to building innovative solutions for education.",
@@ -29,7 +29,7 @@ export default function AboutUs() {
     <div className="min-h-screen bg-calm-100 text-gray-700 p-6 flex flex-col items-center">
       <h1 className="text-5xl font-bold text-calm-900 mt-10 mb-4">About Us</h1>
       <p className="text-lg text-center max-w-2xl mb-10">
-        We are a team of Electronics and Telecommunication graduates from WIT Solapur, dedicated to transforming education with interactive, engaging platforms. Our mission is to make learning accessible and enjoyable for everyone.
+        We are a team of Master of Computer Science students from Prof. Ram Meghe Institute of Technology & Research Amravati, dedicated to transforming education with interactive, engaging platforms. Our mission is to make learning accessible and enjoyable for everyone.
       </p>
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8 max-w-6xl justify-center">
