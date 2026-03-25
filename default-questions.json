@@ -1,0 +1,252 @@
+[
+  {
+    "question": "What is the capital of France?",
+    "ops": ["London", "Berlin", "Paris", "Madrid"],
+    "answer": "Paris"
+  },
+  {
+    "question": "What is 2 + 2?",
+    "ops": ["3", "4", "5", "6"],
+    "answer": "4"
+  },
+  {
+    "question": "Who wrote 'Romeo and Juliet'?",
+    "ops": ["Charles Dickens", "William Shakespeare", "Mark Twain", "Jane Austen"],
+    "answer": "William Shakespeare"
+  },
+  {
+    "question": "What is the largest planet in our solar system?",
+    "ops": ["Earth", "Mars", "Jupiter", "Saturn"],
+    "answer": "Jupiter"
+  },
+  {
+    "question": "What is the chemical symbol for water?",
+    "ops": ["O2", "H2O", "CO2", "NaCl"],
+    "answer": "H2O"
+  },
+  {
+    "question": "In which year did World War II end?",
+    "ops": ["1943", "1944", "1945", "1946"],
+    "answer": "1945"
+  },
+  {
+    "question": "What is the smallest prime number?",
+    "ops": ["0", "1", "2", "3"],
+    "answer": "2"
+  },
+  {
+    "question": "Which continent is the Sahara Desert located in?",
+    "ops": ["Asia", "Africa", "Australia", "South America"],
+    "answer": "Africa"
+  },
+  {
+    "question": "What is the speed of light in vacuum?",
+    "ops": ["300,000 km/s", "150,000 km/s", "450,000 km/s", "600,000 km/s"],
+    "answer": "300,000 km/s"
+  },
+  {
+    "question": "Who painted the Mona Lisa?",
+    "ops": ["Vincent van Gogh", "Pablo Picasso", "Leonardo da Vinci", "Michelangelo"],
+    "answer": "Leonardo da Vinci"
+  },
+  {
+    "question": "What is the square root of 144?",
+    "ops": ["10", "11", "12", "13"],
+    "answer": "12"
+  },
+  {
+    "question": "Which programming language is known as the 'language of the web'?",
+    "ops": ["Python", "Java", "JavaScript", "C++"],
+    "answer": "JavaScript"
+  },
+  {
+    "question": "What is the boiling point of water at sea level?",
+    "ops": ["90°C", "100°C", "110°C", "120°C"],
+    "answer": "100°C"
+  },
+  {
+    "question": "Who developed the theory of relativity?",
+    "ops": ["Isaac Newton", "Albert Einstein", "Galileo Galilei", "Stephen Hawking"],
+    "answer": "Albert Einstein"
+  },
+  {
+    "question": "What is the capital of Japan?",
+    "ops": ["Seoul", "Beijing", "Tokyo", "Bangkok"],
+    "answer": "Tokyo"
+  },
+  {
+    "question": "How many continents are there on Earth?",
+    "ops": ["5", "6", "7", "8"],
+    "answer": "7"
+  },
+  {
+    "question": "What is the largest ocean on Earth?",
+    "ops": ["Atlantic Ocean", "Indian Ocean", "Arctic Ocean", "Pacific Ocean"],
+    "answer": "Pacific Ocean"
+  },
+  {
+    "question": "What is the powerhouse of the cell?",
+    "ops": ["Nucleus", "Ribosome", "Mitochondria", "Chloroplast"],
+    "answer": "Mitochondria"
+  },
+  {
+    "question": "In which country is the Great Pyramid of Giza located?",
+    "ops": ["Mexico", "Egypt", "Peru", "Iraq"],
+    "answer": "Egypt"
+  },
+  {
+    "question": "What is the value of Pi (π) to two decimal places?",
+    "ops": ["3.12", "3.14", "3.16", "3.18"],
+    "answer": "3.14"
+  },
+  {
+    "question": "What is the hardest natural substance on Earth?",
+    "ops": ["Gold", "Iron", "Diamond", "Platinum"],
+    "answer": "Diamond"
+  },
+  {
+    "question": "Who was the first person to walk on the moon?",
+    "ops": ["Buzz Aldrin", "Neil Armstrong", "Yuri Gagarin", "John Glenn"],
+    "answer": "Neil Armstrong"
+  },
+  {
+    "question": "What is the main gas found in Earth's atmosphere?",
+    "ops": ["Oxygen", "Carbon Dioxide", "Nitrogen", "Hydrogen"],
+    "answer": "Nitrogen"
+  },
+  {
+    "question": "How many sides does a hexagon have?",
+    "ops": ["5", "6", "7", "8"],
+    "answer": "6"
+  },
+  {
+    "question": "What is the currency of the United Kingdom?",
+    "ops": ["Euro", "Dollar", "Pound Sterling", "Yen"],
+    "answer": "Pound Sterling"
+  },
+  {
+    "question": "What does DNA stand for?",
+    "ops": ["Deoxyribonucleic Acid", "Dinitrogen Acid", "Dynamic Nuclear Acid", "Dextrose Nucleic Acid"],
+    "answer": "Deoxyribonucleic Acid"
+  },
+  {
+    "question": "Which planet is known as the Red Planet?",
+    "ops": ["Venus", "Mars", "Mercury", "Neptune"],
+    "answer": "Mars"
+  },
+  {
+    "question": "What is the freezing point of water in Celsius?",
+    "ops": ["-10°C", "0°C", "10°C", "32°C"],
+    "answer": "0°C"
+  },
+  {
+    "question": "Who invented the telephone?",
+    "ops": ["Thomas Edison", "Nikola Tesla", "Alexander Graham Bell", "Guglielmo Marconi"],
+    "answer": "Alexander Graham Bell"
+  },
+  {
+    "question": "What is the longest river in the world?",
+    "ops": ["Amazon River", "Nile River", "Yangtze River", "Mississippi River"],
+    "answer": "Nile River"
+  },
+  {
+    "question": "What is the chemical symbol for gold?",
+    "ops": ["Go", "Gd", "Au", "Ag"],
+    "answer": "Au"
+  },
+  {
+    "question": "How many bones are in the adult human body?",
+    "ops": ["196", "206", "216", "226"],
+    "answer": "206"
+  },
+  {
+    "question": "What is the smallest country in the world?",
+    "ops": ["Monaco", "Vatican City", "San Marino", "Liechtenstein"],
+    "answer": "Vatican City"
+  },
+  {
+    "question": "What year did the Titanic sink?",
+    "ops": ["1910", "1911", "1912", "1913"],
+    "answer": "1912"
+  },
+  {
+    "question": "What is the tallest mountain in the world?",
+    "ops": ["K2", "Kangchenjunga", "Mount Everest", "Lhotse"],
+    "answer": "Mount Everest"
+  },
+  {
+    "question": "What is the primary language spoken in Brazil?",
+    "ops": ["Spanish", "Portuguese", "French", "English"],
+    "answer": "Portuguese"
+  },
+  {
+    "question": "How many planets are in our solar system?",
+    "ops": ["7", "8", "9", "10"],
+    "answer": "8"
+  },
+  {
+    "question": "What is the largest mammal in the world?",
+    "ops": ["African Elephant", "Blue Whale", "Giraffe", "Polar Bear"],
+    "answer": "Blue Whale"
+  },
+  {
+    "question": "What is the capital of Australia?",
+    "ops": ["Sydney", "Melbourne", "Canberra", "Brisbane"],
+    "answer": "Canberra"
+  },
+  {
+    "question": "Who wrote '1984'?",
+    "ops": ["Aldous Huxley", "George Orwell", "Ray Bradbury", "H.G. Wells"],
+    "answer": "George Orwell"
+  },
+  {
+    "question": "What is the atomic number of carbon?",
+    "ops": ["4", "6", "8", "12"],
+    "answer": "6"
+  },
+  {
+    "question": "In which year did the Berlin Wall fall?",
+    "ops": ["1987", "1988", "1989", "1990"],
+    "answer": "1989"
+  },
+  {
+    "question": "What is the largest desert in the world?",
+    "ops": ["Sahara Desert", "Arabian Desert", "Gobi Desert", "Antarctic Desert"],
+    "answer": "Antarctic Desert"
+  },
+  {
+    "question": "What is the formula for calculating the area of a circle?",
+    "ops": ["πr", "2πr", "πr²", "2πr²"],
+    "answer": "πr²"
+  },
+  {
+    "question": "Who discovered penicillin?",
+    "ops": ["Marie Curie", "Louis Pasteur", "Alexander Fleming", "Jonas Salk"],
+    "answer": "Alexander Fleming"
+  },
+  {
+    "question": "What is the most spoken language in the world?",
+    "ops": ["English", "Spanish", "Mandarin Chinese", "Hindi"],
+    "answer": "Mandarin Chinese"
+  },
+  {
+    "question": "What is the symbol for the element oxygen?",
+    "ops": ["O", "Ox", "O2", "Om"],
+    "answer": "O"
+  },
+  {
+    "question": "How many degrees are in a right angle?",
+    "ops": ["45", "60", "90", "180"],
+    "answer": "90"
+  },
+  {
+    "question": "What is the capital of Canada?",
+    "ops": ["Toronto", "Vancouver", "Montreal", "Ottawa"],
+    "answer": "Ottawa"
+  },
+  {
+    "question": "What is the process by which plants make their food?",
+    "ops": ["Respiration", "Photosynthesis", "Digestion", "Fermentation"],
+    "answer": "Photosynthesis"
+  }
+]
