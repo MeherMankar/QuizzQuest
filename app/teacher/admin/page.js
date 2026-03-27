@@ -95,7 +95,7 @@ export default function AdminPanel() {
                 <input
                   type="text"
                   value={credentials.username}
-                  onChange={(e) => setCredentials({ ...credentials, username: e.target.value })}}
+                  onChange={(e) => setCredentials({ ...credentials, username: e.target.value })}
                   className="w-full px-4 py-2 bg-gray-700 border border-gray-600 text-white rounded-lg focus:outline-none focus:border-amber-500"
                   placeholder="admin@hello.com"
                   required
