@@ -4,7 +4,7 @@ import Image from "next/image"
 import NavBar from "./NavBar";
 import { useState, useEffect } from 'react';
 
-export default function page() {
+export default function Profile() {
     const { data: session } = useSession();
     const [role, setRole] = useState(null);
 
