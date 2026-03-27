@@ -1,9 +1,9 @@
 'use client';
 import { signIn } from 'next-auth/react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 
-export default function LoginPage() {
+function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [loading, setLoading] = useState(false);
@@ -15,7 +15,6 @@ export default function LoginPage() {
   });
   const [error, setError] = useState('');
 
-  // Get return URL and switched role from URL parameters
   const returnUrl = searchParams.get('returnUrl') || '/';
   const switchedRole = searchParams.get('switchedRole');
 
@@ -76,7 +75,6 @@ export default function LoginPage() {
     }
   };
 
-  // Show role switch message
   useEffect(() => {
     if (switchedRole) {
       setError(`Please sign in again to switch to ${switchedRole} role`);
@@ -181,5 +179,17 @@ export default function LoginPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={
+      <div className="h-screen flex items-center justify-center bg-gradient-to-r from-purple-500 to-indigo-500">
+        <div className="text-white text-xl">Loading...</div>
+      </div>
+    }>
+      <LoginForm />
+    </Suspense>
   );
 }

@@ -3,6 +3,8 @@ import { getServerSession } from "next-auth";
 import { options } from '../[...nextauth]/options';
 import { NextResponse } from 'next/server';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(req) {
   try {
     const session = await getServerSession(options);
