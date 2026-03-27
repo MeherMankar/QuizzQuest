@@ -3,11 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "node server.js",
+    "dev": "next dev",
     "build": "next build",
-    "start": "NODE_ENV=production node server.js",
+    "start": "next start",
     "lint": "next lint",
-    "postbuild": "node -e \"const fs = require('fs'); const path = require('path'); const dir = '.next/static/stockfish'; if (!fs.existsSync(dir)) fs.mkdirSync(dir, {recursive: true}); fs.copyFileSync('public/stockfish/stockfish.wasm', path.join(dir, 'stockfish.wasm'));\""
+    "dev:custom": "node server.js",
+    "start:custom": "NODE_ENV=production node server.js"
   },
   "dependencies": {
     "@fortawesome/free-solid-svg-icons": "^6.7.2",
