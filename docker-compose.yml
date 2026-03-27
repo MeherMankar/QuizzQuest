@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - MONGODB_URL=${MONGODB_URL}
+      - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
+      - NEXTAUTH_URL=${NEXTAUTH_URL}
+      - GOOGLE_ID=${GOOGLE_ID}
+      - GOOGLE_SECRET=${GOOGLE_SECRET}
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - HUGGINGFACE_API_KEY=${HUGGINGFACE_API_KEY}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
+      - ROUTEWAY_API_KEY=${ROUTEWAY_API_KEY}
+    restart: unless-stopped
+    networks:
+      - quizzquest-network
+
+  # Optional: Local MongoDB (uncomment if not using Atlas)
+  # mongodb:
+  #   image: mongo:7
+  #   ports:
+  #     - "27017:27017"
+  #   volumes:
+  #     - mongodb_data:/data/db
+  #   environment:
+  #     - MONGO_INITDB_DATABASE=QuizApp_users
+  #   restart: unless-stopped
+  #   networks:
+  #     - quizzquest-network
+
+networks:
+  quizzquest-network:
+    driver: bridge
+
+# volumes:
+#   mongodb_data:
