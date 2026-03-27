@@ -2,7 +2,7 @@
 import NavBar from "./NavBar";
 import "../global.css";
 import { useRouter } from 'next/navigation';
-import { signIn, signOut, useSession } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import { useState, useEffect } from 'react';
 
 export default function Component() {
@@ -64,86 +64,79 @@ export default function Component() {
   }, [session]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white relative overflow-hidden">
-      {/* Animated Background Elements */}
-      <div className="absolute inset-0">
-        <div className="absolute top-20 left-10 w-72 h-72 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"></div>
-        <div className="absolute top-40 right-10 w-72 h-72 bg-yellow-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse animation-delay-2000"></div>
-        <div className="absolute -bottom-8 left-20 w-72 h-72 bg-pink-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse animation-delay-4000"></div>
-      </div>
-      
+    <div className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-900 to-gray-800">
       <NavBar />
       
-      <main className="pt-20 px-6 relative z-10">
-        <div className="max-w-6xl mx-auto">
-          {/* Hero Section */}
-          <div className="text-center mb-16">
-            <h1 className="text-6xl md:text-7xl font-bold mb-6">
-              <span className="bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 bg-clip-text text-transparent">
+      <main className="container mx-auto px-4 pt-24 pb-16">
+        <div className="mx-auto max-w-5xl">
+          <div className="mb-16 text-center">
+            <h1 className="mb-4 text-5xl font-bold tracking-tight sm:text-6xl md:text-7xl">
+              <span className="bg-gradient-to-r from-amber-400 to-orange-500 bg-clip-text text-transparent">
                 QuizQuest
               </span>
             </h1>
-            <p className="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
+            <p className="mx-auto max-w-2xl text-lg text-gray-400 sm:text-xl">
               Transform learning into an adventure with interactive quizzes and games
             </p>
           </div>
 
-          {/* Features Grid */}
-          <div className="grid md:grid-cols-3 gap-8 mb-16">
-            <div className="group bg-white/10 backdrop-blur-lg p-8 rounded-2xl border border-white/20 hover:bg-white/20 transition-all duration-300 hover:scale-105">
-              <div className="text-4xl mb-4">🎮</div>
-              <h3 className="text-xl font-bold mb-3 text-yellow-400">Interactive Games</h3>
-              <p className="text-gray-300">Solve quizzes through engaging games that make learning fun and memorable</p>
+          <div className="mb-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="rounded-lg border border-gray-800 bg-gray-900/50 p-6 transition-colors hover:border-gray-700">
+              <div className="mb-3 text-3xl">🎮</div>
+              <h3 className="mb-2 text-lg font-semibold text-amber-400">Interactive Games</h3>
+              <p className="text-sm text-gray-400">Solve quizzes through engaging games that make learning fun and memorable</p>
             </div>
-            <div className="group bg-white/10 backdrop-blur-lg p-8 rounded-2xl border border-white/20 hover:bg-white/20 transition-all duration-300 hover:scale-105">
-              <div className="text-4xl mb-4">📚</div>
-              <h3 className="text-xl font-bold mb-3 text-purple-400">Smart Quizzes</h3>
-              <p className="text-gray-300">AI-powered quiz generation and custom question creation for teachers</p>
+            <div className="rounded-lg border border-gray-800 bg-gray-900/50 p-6 transition-colors hover:border-gray-700">
+              <div className="mb-3 text-3xl">📚</div>
+              <h3 className="mb-2 text-lg font-semibold text-purple-400">Smart Quizzes</h3>
+              <p className="text-sm text-gray-400">AI-powered quiz generation and custom question creation for teachers</p>
             </div>
-            <div className="group bg-white/10 backdrop-blur-lg p-8 rounded-2xl border border-white/20 hover:bg-white/20 transition-all duration-300 hover:scale-105">
-              <div className="text-4xl mb-4">🏆</div>
-              <h3 className="text-xl font-bold mb-3 text-pink-400">Progress Tracking</h3>
-              <p className="text-gray-300">Monitor performance with detailed analytics and competitive rankings</p>
+            <div className="rounded-lg border border-gray-800 bg-gray-900/50 p-6 transition-colors hover:border-gray-700">
+              <div className="mb-3 text-3xl">🏆</div>
+              <h3 className="mb-2 text-lg font-semibold text-pink-400">Progress Tracking</h3>
+              <p className="text-sm text-gray-400">Monitor performance with detailed analytics and competitive rankings</p>
             </div>
           </div>
 
-          {/* Action Section */}
           <div className="text-center">
             {!session ? (
-              <div className="space-y-6">
+              <div className="space-y-4">
                 <button
                   onClick={() => signIn()}
-                  className="group relative px-12 py-4 bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-400 hover:to-orange-400 text-black font-bold text-lg rounded-full transition-all duration-300 transform hover:scale-105 shadow-2xl"
+                  className="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-amber-500 to-orange-500 px-8 py-3 font-semibold text-gray-900 transition-opacity hover:opacity-90"
                 >
-                  <span className="relative z-10">🚀 Start Your Journey</span>
-                  <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 to-orange-400 rounded-full blur opacity-75 group-hover:opacity-100 transition-opacity"></div>
+                  <span>🚀</span>
+                  <span>Start Your Journey</span>
                 </button>
-                <p className="text-gray-400">Join thousands of learners worldwide</p>
+                <p className="text-sm text-gray-500">Join thousands of learners worldwide</p>
               </div>
             ) : (
-              <div className="space-y-6">
+              <div className="space-y-4">
                 {!loading && role === null && (
                   <button
                     onClick={handleSignup}
-                    className="px-10 py-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-bold rounded-full transition-all duration-300 transform hover:scale-105 shadow-xl"
+                    className="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 px-8 py-3 font-semibold text-white transition-opacity hover:opacity-90"
                   >
-                    🎯 Choose Your Path
+                    <span>🎯</span>
+                    <span>Choose Your Path</span>
                   </button>
                 )}
 
                 {role === 'teacher' && (
-                  <div className="flex flex-col sm:flex-row gap-6 justify-center">
+                  <div className="flex flex-col gap-4 sm:flex-row sm:justify-center">
                     <button
                       onClick={handleCreateQuestion}
-                      className="px-8 py-4 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-400 hover:to-emerald-400 text-white font-bold rounded-full transition-all duration-300 transform hover:scale-105 shadow-xl"
+                      className="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-green-500 to-emerald-500 px-6 py-3 font-semibold text-white transition-opacity hover:opacity-90"
                     >
-                      ✨ Create Questions
+                      <span>✨</span>
+                      <span>Create Questions</span>
                     </button>
                     <button
                       onClick={handleViewQuestions}
-                      className="px-8 py-4 bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-400 hover:to-cyan-400 text-white font-bold rounded-full transition-all duration-300 transform hover:scale-105 shadow-xl"
+                      className="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-blue-500 to-cyan-500 px-6 py-3 font-semibold text-white transition-opacity hover:opacity-90"
                     >
-                      📋 Manage Quizzes
+                      <span>📋</span>
+                      <span>Manage Quizzes</span>
                     </button>
                   </div>
                 )}
@@ -151,9 +144,10 @@ export default function Component() {
                 {role === 'student' && (
                   <button
                     onClick={handleSolveQuestions}
-                    className="px-10 py-4 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-400 hover:to-pink-400 text-white font-bold text-lg rounded-full transition-all duration-300 transform hover:scale-105 shadow-xl"
+                    className="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-purple-500 to-pink-500 px-8 py-3 font-semibold text-white transition-opacity hover:opacity-90"
                   >
-                    🎮 Start Playing
+                    <span>🎮</span>
+                    <span>Start Playing</span>
                   </button>
                 )}
               </div>

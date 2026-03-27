@@ -9,27 +9,56 @@ export const options = {
     GoogleProvider({
       clientId: process.env.GOOGLE_ID,
       clientSecret: process.env.GOOGLE_SECRET,
-      async profile(profile) {
-        const client = await clientPromise;
-        const db = client.db('QuizApp_users');
-        
-        // Check user's role
-        const user = await db.collection('users').findOne({ email: profile.email });
-        let role = user?.role;
-
-        if (!role) {
-          const teacher = await db.collection('teachers').findOne({ email: profile.email });
-          const student = await db.collection('students').findOne({ email: profile.email });
-          role = teacher ? 'teacher' : (student ? 'student' : null);
+      authorization: {
+        params: {
+          prompt: "consent",
+          access_type: "offline",
+          response_type: "code"
         }
+      },
+      async profile(profile) {
+        try {
+          const client = await clientPromise;
+          if (!client) {
+            console.error('MongoDB client not available');
+            return {
+              id: profile.sub,
+              name: profile.name,
+              email: profile.email,
+              image: profile.picture,
+              role: null,
+            };
+          }
+          
+          const db = client.db('QuizApp_users');
+          
+          // Check user's role
+          const user = await db.collection('users').findOne({ email: profile.email });
+          let role = user?.role;
 
-        return {
-          id: profile.sub,
-          name: profile.name,
-          email: profile.email,
-          image: profile.picture,
-          role: role,
-        };
+          if (!role) {
+            const teacher = await db.collection('teachers').findOne({ email: profile.email });
+            const student = await db.collection('students').findOne({ email: profile.email });
+            role = teacher ? 'teacher' : (student ? 'student' : null);
+          }
+
+          return {
+            id: profile.sub,
+            name: profile.name,
+            email: profile.email,
+            image: profile.picture,
+            role: role,
+          };
+        } catch (error) {
+          console.error('Error in profile callback:', error);
+          return {
+            id: profile.sub,
+            name: profile.name,
+            email: profile.email,
+            image: profile.picture,
+            role: null,
+          };
+        }
       }
     }),
     CredentialsProvider({
@@ -70,27 +99,36 @@ export const options = {
     }),
   ],
   pages: {
-    signIn: '/auth/login',  // Custom sign-in page route
-  },  callbacks: {
+    signIn: '/auth/login',
+  },
+  session: {
+    strategy: 'jwt',
+    maxAge: 30 * 24 * 60 * 60, // 30 days
+  },
+  secret: process.env.NEXTAUTH_SECRET,
+  callbacks: {
     async jwt({ token, user, trigger, session }) {
       if (user) {
-        // Initial sign in
         token.id = user.id;
         token.role = user.role;
       }
       
-      // Always fetch latest role from database
-      const client = await clientPromise;
-      const db = client.db('QuizApp_users');
-      
-      // Check current role in database
-      const teacher = await db.collection('teachers').findOne({ email: token.email });
-      const student = await db.collection('students').findOne({ email: token.email });
-      
-      if (teacher) {
-        token.role = 'teacher';
-      } else if (student) {
-        token.role = 'student';
+      try {
+        const client = await clientPromise;
+        if (!client) return token;
+        
+        const db = client.db('QuizApp_users');
+        
+        const teacher = await db.collection('teachers').findOne({ email: token.email });
+        const student = await db.collection('students').findOne({ email: token.email });
+        
+        if (teacher) {
+          token.role = 'teacher';
+        } else if (student) {
+          token.role = 'student';
+        }
+      } catch (error) {
+        console.error('Error fetching role in jwt callback:', error);
       }
       
       return token;
@@ -108,9 +146,10 @@ export const options = {
     async signIn({ user, account, profile }) {
       try {
         const client = await clientPromise;
+        if (!client) return;
+        
         const db = client.db('QuizApp_users');
         
-        // Check user's role when signing in
         const teacher = await db.collection('teachers').findOne({ email: user.email });
         const student = await db.collection('students').findOne({ email: user.email });
         
@@ -123,7 +162,8 @@ export const options = {
         console.error('Error in signIn event:', error);
       }
     }
-  }
+  },
+  debug: process.env.NODE_ENV === 'development'
 };
 
 export default NextAuth(options);

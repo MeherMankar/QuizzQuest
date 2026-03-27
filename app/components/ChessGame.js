@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Chess } from 'chess.js';
 import { Chessboard } from 'react-chessboard';
+import { useRouter } from 'next/navigation';
 import io from 'socket.io-client';
 
 const DIFFICULTY_LEVELS = {
@@ -15,6 +16,7 @@ const DIFFICULTY_LEVELS = {
 };
 
 export default function ChessGame() {
+  const router = useRouter();
   const [game, setGame] = useState(new Chess());
   const [fen, setFen] = useState(game.fen());
   const [status, setStatus] = useState('');
@@ -27,6 +29,7 @@ export default function ChessGame() {
   const [roomID, setRoomID] = useState('');
   const [inputRoomID, setInputRoomID] = useState('');
   const [onlineStatus, setOnlineStatus] = useState('Disconnected');
+  const [gameResult, setGameResult] = useState(null);
   const socketRef = useRef(null); 
 
 
@@ -120,10 +123,14 @@ export default function ChessGame() {
     const turn = game.turn() === 'w' ? 'White' : 'Black';
     
     if (game.isCheckmate()) {
-      setStatus(`Checkmate! ${turn === 'White' ? 'Black' : 'White'} wins.`);
+      const winner = turn === 'White' ? 'Black' : 'White';
+      setStatus(`Checkmate! ${winner} wins.`);
+      setGameResult({ type: 'win', winner });
     } else if (game.isDraw()) {
       setStatus('Draw!');
+      setGameResult({ type: 'draw' });
     } else {
+      setGameResult(null);
       let statusText = `${turn}'s turn`;
       if (game.inCheck()) statusText += ` (in check)`;
       
@@ -159,6 +166,7 @@ export default function ChessGame() {
 
   const resetGame = () => {
     safeGameMutate((g) => g.reset());
+    setGameResult(null);
   };
 
   const undoMove = () => {
@@ -175,6 +183,51 @@ export default function ChessGame() {
 
   return (
     <div className="flex flex-col items-center w-full p-4 bg-gray-800 rounded-lg">
+      {gameResult && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
+          <div className="bg-gray-800 border-2 border-gray-700 rounded-xl p-8 max-w-md w-full mx-4 shadow-2xl">
+            <div className="text-center">
+              {gameResult.type === 'win' && (
+                <>
+                  <div className="text-6xl mb-4">{gameResult.winner === 'White' ? '👑' : '🏆'}</div>
+                  <h2 className="text-3xl font-bold mb-2">
+                    {gameMode === 'ai' && gameResult.winner === (playerColor === 'w' ? 'White' : 'Black') ? (
+                      <span className="text-green-400">You Win!</span>
+                    ) : gameMode === 'ai' ? (
+                      <span className="text-red-400">You Lose!</span>
+                    ) : (
+                      <span className="text-amber-400">{gameResult.winner} Wins!</span>
+                    )}
+                  </h2>
+                  <p className="text-gray-400 mb-6">Checkmate</p>
+                </>
+              )}
+              {gameResult.type === 'draw' && (
+                <>
+                  <div className="text-6xl mb-4">🤝</div>
+                  <h2 className="text-3xl font-bold text-blue-400 mb-2">Draw!</h2>
+                  <p className="text-gray-400 mb-6">Game ended in a draw</p>
+                </>
+              )}
+              <div className="flex gap-3 justify-center">
+                <button
+                  onClick={resetGame}
+                  className="px-6 py-3 bg-green-600 hover:bg-green-500 text-white rounded-lg font-semibold transition-colors"
+                >
+                  New Game
+                </button>
+                <button
+                  onClick={() => router.push('/')}
+                  className="px-6 py-3 bg-gray-600 hover:bg-gray-500 text-white rounded-lg font-semibold transition-colors"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      
       <div className="w-full mb-4 p-3 bg-gray-700 rounded text-center font-semibold">
         {status}
       </div>
