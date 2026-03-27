@@ -8,11 +8,20 @@ The QuizzQuest admin system allows administrators to manage user roles. By defau
 
 Set in `.env.local`:
 ```
-ADMIN_USERNAME=admin
+ADMIN_USERNAME=admin@hello.com
 ADMIN_PASSWORD=admin123
 ```
 
 **IMPORTANT**: Change the default password in production!
+
+## Admin Panel Access
+
+**Web Interface**: http://localhost:3000/teacher/admin
+
+1. Navigate to the teacher page
+2. Click "Admin Panel" button
+3. Login with admin credentials (email format required)
+4. Manage user roles from the dashboard
 
 ## Role System
 
