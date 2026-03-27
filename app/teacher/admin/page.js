@@ -96,7 +96,7 @@ export default function AdminPanel() {
                   type="text"
                   value={credentials.username}
                   onChange={(e) => setCredentials({ ...credentials, username: e.target.value })}
-                  className="w-full px-4 py-2 bg-gray-700 border border-gray-600 text-white rounded-lg focus:outline-none focus:border-amber-500"
+                  className="w-full px-4 py-2 bg-white text-gray-900 rounded-lg border border-gray-600 focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500"
                   placeholder="admin@hello.com"
                   required
                 />
@@ -107,7 +107,7 @@ export default function AdminPanel() {
                   type="password"
                   value={credentials.password}
                   onChange={(e) => setCredentials({ ...credentials, password: e.target.value })}
-                  className="w-full px-4 py-2 bg-gray-700 border border-gray-600 text-white rounded-lg focus:outline-none focus:border-amber-500"
+                  className="w-full px-4 py-2 bg-white text-gray-900 rounded-lg border border-gray-600 focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500"
                   required
                 />
               </div>
