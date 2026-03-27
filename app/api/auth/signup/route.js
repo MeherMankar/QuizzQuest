@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { hash } from 'bcrypt';
+import { hash } from 'bcryptjs';
 import clientPromise from '../../../../lib/mongodb';
 
 export async function POST(req) {
@@ -28,7 +28,7 @@ export async function POST(req) {
     }
 
     // Hash password
-    const hashedPassword = await hash(password, 12);
+    const hashedPassword = await hash(password, 10);
 
     // Create user
     const result = await db.collection('users').insertOne({
