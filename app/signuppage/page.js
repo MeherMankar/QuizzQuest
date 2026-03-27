@@ -1,63 +1,38 @@
 'use client';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect } from 'react';
 
 export default function Signup() {
   const router = useRouter();
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
 
-  const handleSignup = async (role) => {
-    setLoading(true);
-    setError(null);
+  useEffect(() => {
+    const assignStudentRole = async () => {
+      try {
+        const response = await fetch('/api/auth/user_roles', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ role: 'student' }),
+        });
 
-    try {
-      const response = await fetch('/api/auth/user_roles', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ role }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Failed to sign up');
+        if (response.ok) {
+          router.push('/');
+        }
+      } catch (err) {
+        console.error('Error assigning role:', err);
       }
+    };
 
-      // Redirect to a different page after successful signup, or show success message
-      alert('Signup successful! Redirecting...');
-      router.push('/'); // or wherever you want to navigate after signup
-    } catch (err) {
-      console.error('Signup error:', err);
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+    assignStudentRole();
+  }, [router]);
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-900 text-white">
-      <h1 className="text-3xl font-bold mb-8">Signup for QuizQuest</h1>
-      <div className="flex space-x-4">
-        <button
-          onClick={() => handleSignup('teacher')}
-          className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-6 rounded-lg font-semibold"
-          disabled={loading}
-        >
-          Signup as Teacher
-        </button>
-        <button
-          onClick={() => handleSignup('student')}
-          className="bg-green-600 hover:bg-green-700 text-white py-2 px-6 rounded-lg font-semibold"
-          disabled={loading}
-        >
-          Signup as Student
-        </button>
+    <div className="min-h-screen flex items-center justify-center bg-gray-900 text-white">
+      <div className="text-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-amber-500 mx-auto mb-4"></div>
+        <p className="text-lg">Setting up your account...</p>
       </div>
-      {error && <p className="text-red-500 mt-4">{error}</p>}
-      {loading && <p className="mt-4">Processing...</p>}
     </div>
   );
 }

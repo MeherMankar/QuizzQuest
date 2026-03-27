@@ -9,6 +9,7 @@ An innovative educational platform that combines traditional quizzes with intera
 - **Chess Game**: Play against AI with 6 difficulty levels or online multiplayer
 - **User Authentication**: Secure login with Google OAuth
 - **Role-Based Access**: Separate interfaces for students and teachers
+- **Admin Panel**: Manage user roles (promote students to teachers)
 - **Progress Tracking**: Track scores and performance
 - **Rankings System**: Competitive leaderboard
 
@@ -40,6 +41,8 @@ An innovative educational platform that combines traditional quizzes with intera
    OPENAI_API_KEY=your_openai_api_key
    OPENROUTER_API_KEY=your_openrouter_api_key
    ROUTEWAY_API_KEY=your_routeway_api_key
+   ADMIN_USERNAME=admin
+   ADMIN_PASSWORD=your_secure_password
    ```
 
 3. **Get API Keys:**
@@ -56,6 +59,18 @@ An innovative educational platform that combines traditional quizzes with intera
    ```
 
 5. **Open [http://localhost:3000](http://localhost:3000)**
+
+## Admin Access
+
+- **Admin Panel**: [http://localhost:3000/admin/login](http://localhost:3000/admin/login)
+- **Default Credentials**: Set in `.env.local` (ADMIN_USERNAME and ADMIN_PASSWORD)
+- **Admin Functions**: Promote students to teachers, demote teachers to students
+
+## User Roles
+
+- **Student**: Default role for new users, cannot self-promote
+- **Teacher**: Can switch between teacher and student views, assigned by admin
+- **Admin**: Full control over user role management
 
 ## Project Structure
 

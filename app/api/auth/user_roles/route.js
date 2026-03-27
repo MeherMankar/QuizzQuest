@@ -5,36 +5,41 @@ import { NextResponse } from 'next/server';
 
 export async function POST(req) {
     try {
-        // Get session info for authentication
         const session = await getServerSession(options);
         
-        // Check if the user is authenticated
         if (!session || !session.user) { 
             return NextResponse.json({ error: 'Not authenticated' }, { status: 401 });
         }
 
-        // Parse the request body to get the role
-        const { role } = await req.json(); // Use `await req.json()` to properly parse the JSON body
+        const { role } = await req.json();
         const userEmail = session.user.email;
 
-        console.log('Switching role for', userEmail, 'to', role);
-
-        // Connect to the MongoDB client
         const client = await clientPromise;
         const db = client.db('QuizApp_users');
 
-        // Update the user's role in the main users collection
+        // Check current role
+        const user = await db.collection('users').findOne({ email: userEmail });
+        const currentRole = user?.role || session.user.role;
+
+        // Students cannot switch roles - only teachers can
+        if (currentRole === 'student' && role === 'teacher') {
+            return NextResponse.json({ 
+                error: 'Students cannot promote themselves to teacher. Contact admin.' 
+            }, { status: 403 });
+        }
+
+        // Update the user's role
         await db.collection('users').updateOne(
             { email: userEmail },
             { $set: { role: role } },
             { upsert: true }
         );
 
-        // First, remove the user from both collections to avoid duplicates
+        // Remove from both collections
         await db.collection('teachers').deleteOne({ email: userEmail });
         await db.collection('students').deleteOne({ email: userEmail });
 
-        // Then add to the appropriate collection
+        // Add to appropriate collection
         if (role === 'teacher') {
             await db.collection('teachers').insertOne({
                 email: userEmail,

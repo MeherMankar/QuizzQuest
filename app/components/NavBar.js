@@ -131,16 +131,18 @@ export default function NavBar() {
 
                         <div className="my-4 border-t border-gray-800"></div>
 
-                        <button
-                            onClick={() => {
-                                const newRole = session?.user?.role === 'teacher' ? 'student' : 'teacher';
-                                handleRoleSwitch(newRole);
-                            }}
-                            className="flex w-full items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium text-purple-400 transition-colors hover:bg-purple-500/10"
-                        >
-                            <FontAwesomeIcon icon={faUser} className="h-4 w-4" />
-                            <span>Switch to {session?.user?.role === 'teacher' ? 'Student' : 'Teacher'}</span>
-                        </button>
+                        {session?.user?.role === 'teacher' && (
+                            <button
+                                onClick={() => {
+                                    const newRole = session?.user?.role === 'teacher' ? 'student' : 'teacher';
+                                    handleRoleSwitch(newRole);
+                                }}
+                                className="flex w-full items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium text-purple-400 transition-colors hover:bg-purple-500/10"
+                            >
+                                <FontAwesomeIcon icon={faUser} className="h-4 w-4" />
+                                <span>Switch to {session?.user?.role === 'teacher' ? 'Student' : 'Teacher'}</span>
+                            </button>
+                        )}
 
                         <button
                             onClick={() => signOut()}
