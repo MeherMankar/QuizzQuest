@@ -54,6 +54,7 @@ export default function NavBar() {
     const navigationItems = [
         { label: 'Home', icon: faHome, action: () => router.push('/') },
         { label: 'Rankings', icon: faRankingStar, action: () => router.push('/rankings') },
+        { label: 'Statistics', icon: faUser, action: () => router.push('/statistics') },
         { label: 'Auto Quiz', icon: faGamepad, action: () => router.push('/autoquiz') },
         { label: 'Chess', icon: faChess, action: () => router.push('/chess') },
         { label: 'Profile', icon: faUser, action: () => router.push('/profile') },
