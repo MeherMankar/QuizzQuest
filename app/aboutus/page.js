@@ -33,7 +33,7 @@ export default function AboutUs() {
                             About Us
                         </h1>
                         <p className="text-lg sm:text-xl text-gray-300 max-w-3xl mx-auto animate-slide-up">
-                            We are a team of Master of Computer Science students from Prof. Ram Meghe Institute of Technology & Research Amravati, 
+                            We are a team of Master of Computer Science students from Vidya Bharti Mahavidyalaya, 
                             dedicated to transforming education with interactive, engaging platforms. Our mission is to make learning accessible 
                             and enjoyable for everyone.
                         </p>
