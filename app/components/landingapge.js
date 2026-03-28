@@ -11,10 +11,6 @@ export default function Component() {
   const [role, setRole] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const handleSignup = () => {
-    router.push('/signuppage');
-  };
-
   const handleCreateQuestion = () => {
     router.push('/teacher/questions');
   };
@@ -44,7 +40,17 @@ export default function Component() {
           });
           const data = await response.json();
           if (response.ok) {
-            setRole(data.role);
+            if (data.role === null) {
+              // Auto-assign student role if no role exists
+              await fetch('/api/auth/user_roles', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ role: 'student' }),
+              });
+              setRole('student');
+            } else {
+              setRole(data.role);
+            }
           } else {
             console.error(data.error);
           }
@@ -112,16 +118,6 @@ export default function Component() {
               </div>
             ) : (
               <div className="space-y-4">
-                {!loading && role === null && (
-                  <button
-                    onClick={handleSignup}
-                    className="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 px-8 py-3 font-semibold text-white transition-opacity hover:opacity-90"
-                  >
-                    <span>🎯</span>
-                    <span>Choose Your Path</span>
-                  </button>
-                )}
-
                 {role === 'teacher' && (
                   <div className="flex flex-col gap-4 sm:flex-row sm:justify-center">
                     <button
@@ -141,7 +137,7 @@ export default function Component() {
                   </div>
                 )}
 
-                {role === 'student' && (
+                {(role === 'student' || loading) && (
                   <button
                     onClick={handleSolveQuestions}
                     className="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-purple-500 to-pink-500 px-8 py-3 font-semibold text-white transition-opacity hover:opacity-90"
