@@ -53,9 +53,11 @@ export default function Component() {
             }
           } else {
             console.error(data.error);
+            setRole('student'); // Fallback to student on error
           }
         } catch (error) {
           console.error('Failed to fetch user role:', error);
+          setRole('student'); // Fallback to student on error
         } finally {
           setLoading(false);
         }
@@ -64,6 +66,7 @@ export default function Component() {
       fetchRole();
     } else {
       setLoading(false);
+      setRole(null);
       localStorage.removeItem("userProfilePic");
       localStorage.removeItem("userName");
     }
@@ -105,7 +108,12 @@ export default function Component() {
           </div>
 
           <div className="text-center">
-            {!session ? (
+            {loading ? (
+              <div className="inline-flex items-center gap-2 rounded-lg bg-gray-800 px-8 py-3 font-semibold text-gray-400">
+                <span>⏳</span>
+                <span>Loading...</span>
+              </div>
+            ) : !session ? (
               <div className="space-y-4">
                 <button
                   onClick={() => signIn()}
@@ -137,7 +145,7 @@ export default function Component() {
                   </div>
                 )}
 
-                {(role === 'student' || loading) && (
+                {role === 'student' && (
                   <button
                     onClick={handleSolveQuestions}
                     className="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-purple-500 to-pink-500 px-8 py-3 font-semibold text-white transition-opacity hover:opacity-90"

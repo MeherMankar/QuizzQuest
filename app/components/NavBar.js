@@ -99,9 +99,6 @@ export default function NavBar() {
                 </div>
             </header>
 
-            {/* spacer to offset fixed header so page content remains clickable */}
-            <div className="h-16" aria-hidden="true" />
-
             {isOpen && (
                 <div className="fixed inset-0 z-40 bg-black/50" onClick={() => setIsOpen(false)} />
             )}
@@ -157,8 +154,6 @@ export default function NavBar() {
                     </div>
                 </div>
             </div>
-
-            <div className="h-16"></div>
         </>
     );
 }
