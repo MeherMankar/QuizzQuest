@@ -38,8 +38,18 @@ export async function GET(req) {
     const users = await db.collection('users').find({}, { 
       projection: { email: 1, name: 1, role: 1, _id: 1 } 
     }).toArray();
+
+    // Check which users are teachers (have been promoted)
+    const teacherEmails = await db.collection('teachers').find({}, { projection: { email: 1 } }).toArray();
+    const teacherEmailSet = new Set(teacherEmails.map(t => t.email));
+
+    // Add isTeacher flag to each user
+    const usersWithTeacherFlag = users.map(user => ({
+      ...user,
+      isTeacher: teacherEmailSet.has(user.email)
+    }));
    
-    return NextResponse.json({ users });
+    return NextResponse.json({ users: usersWithTeacherFlag });
   } catch (error) {
     console.error('Failed to fetch users:', error);
     return NextResponse.json({ error: 'Failed to fetch users' }, { status: 500 });

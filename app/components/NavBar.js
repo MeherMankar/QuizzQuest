@@ -3,25 +3,50 @@ import Image from "next/image";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHome, faBars, faTimes, faRankingStar, faGamepad, faChess, faUser, faInfoCircle, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
+import { faHome, faBars, faTimes, faRankingStar, faGamepad, faChess, faUser, faInfoCircle, faSignOutAlt, faClipboardList } from '@fortawesome/free-solid-svg-icons';
 import { signOut, useSession } from 'next-auth/react';
 
 export default function NavBar() {
     const [isOpen, setIsOpen] = useState(false);
     const [userProfilePic, setUserProfilePic] = useState(null);
     const [isRoleDropdownOpen, setIsRoleDropdownOpen] = useState(false);
+    const [canSwitchRole, setCanSwitchRole] = useState(false);
+    const [currentRole, setCurrentRole] = useState('student');
     const { data: session, update: updateSession } = useSession();
     const router = useRouter();
 
     useEffect(() => {
         setUserProfilePic(localStorage.getItem("userProfilePic"));
-    }, []);
+        
+        // Check if user can switch roles
+        const checkRolePermission = async () => {
+            try {
+                const response = await fetch('/api/auth/can-switch-role');
+                if (response.ok) {
+                    const data = await response.json();
+                    setCanSwitchRole(data.canSwitch);
+                    setCurrentRole(data.currentRole);
+                }
+            } catch (error) {
+                console.error('Error checking role permission:', error);
+            }
+        };
+        
+        if (session?.user) {
+            checkRolePermission();
+        }
+    }, [session]);
 
     const ToggleMenu = (open) => {
         setIsOpen(open !== undefined ? open : !isOpen);
     };
 
     const handleRoleSwitch = async (role) => {
+        if (!canSwitchRole) {
+            alert('Only teachers can switch roles. Contact admin to become a teacher.');
+            return;
+        }
+        
         try {
             const response = await fetch('/api/auth/user_roles', {
                 method: 'POST',
@@ -31,6 +56,8 @@ export default function NavBar() {
                 body: JSON.stringify({ role }),
             });
 
+            const data = await response.json();
+            
             if (response.ok) {
                 // Update the session with the new role
                 await updateSession({
@@ -41,18 +68,21 @@ export default function NavBar() {
                     }
                 });
 
+                setCurrentRole(role);
                 setIsOpen(false);
                 router.refresh();
             } else {
-                console.error('Failed to switch role');
+                alert(data.error || 'Failed to switch role');
             }
         } catch (error) {
             console.error('Error switching role:', error);
+            alert('Failed to switch role');
         }
     };
 
     const navigationItems = [
         { label: 'Home', icon: faHome, action: () => router.push('/') },
+        { label: 'Quizzes', icon: faClipboardList, action: () => router.push('/quizzes') },
         { label: 'Rankings', icon: faRankingStar, action: () => router.push('/rankings') },
         { label: 'Statistics', icon: faUser, action: () => router.push('/statistics') },
         { label: 'Auto Quiz', icon: faGamepad, action: () => router.push('/autoquiz') },
@@ -132,16 +162,16 @@ export default function NavBar() {
 
                         <div className="my-4 border-t border-gray-800"></div>
 
-                        {session?.user?.role === 'teacher' && (
+                        {canSwitchRole && (
                             <button
                                 onClick={() => {
-                                    const newRole = session?.user?.role === 'teacher' ? 'student' : 'teacher';
+                                    const newRole = currentRole === 'teacher' ? 'student' : 'teacher';
                                     handleRoleSwitch(newRole);
                                 }}
                                 className="flex w-full items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium text-purple-400 transition-colors hover:bg-purple-500/10"
                             >
                                 <FontAwesomeIcon icon={faUser} className="h-4 w-4" />
-                                <span>Switch to {session?.user?.role === 'teacher' ? 'Student' : 'Teacher'}</span>
+                                <span>Switch to {currentRole === 'teacher' ? 'Student' : 'Teacher'}</span>
                             </button>
                         )}
 

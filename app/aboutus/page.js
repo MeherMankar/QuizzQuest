@@ -17,7 +17,7 @@ const founders = [
         email: "pritamborade24@gmail.com",
         phone: "+91 7820905844",
         description: "An MCA student at Vidya Bharti Mahavidyalaya, dedicated to building innovative solutions for education.",
-        image: "Chaitali.jpg",
+        image: "pritam.jpeg",
         linkedin: "https://www.linkedin.com/in/pritam-borade-8b218b243 ",
     }
 ];

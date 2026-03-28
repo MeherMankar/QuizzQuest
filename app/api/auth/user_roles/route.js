@@ -17,48 +17,48 @@ export async function POST(req) {
         const client = await clientPromise;
         const db = client.db('QuizApp_users');
 
-        // Check current role
-        const user = await db.collection('users').findOne({ email: userEmail });
-        const currentRole = user?.role || session.user.role;
-
-        // Students cannot switch roles - only teachers can
-        if (currentRole === 'student' && role === 'teacher') {
+        // Check if user has ever been a teacher
+        const isTeacher = await db.collection('teachers').findOne({ email: userEmail });
+        
+        // Only users who have been promoted to teacher can switch roles
+        if (!isTeacher) {
             return NextResponse.json({ 
-                error: 'Students cannot promote themselves to teacher. Contact admin.' 
+                error: 'Only teachers can switch roles. Contact admin to become a teacher.' 
             }, { status: 403 });
         }
 
-        // Update the user's role
+        // Teachers can switch between teacher and student
+        if (role !== 'teacher' && role !== 'student') {
+            return NextResponse.json({ error: 'Invalid role specified' }, { status: 400 });
+        }
+
+        // Update the user's current role
         await db.collection('users').updateOne(
             { email: userEmail },
             { $set: { role: role } },
             { upsert: true }
         );
 
-        // Remove from both collections
-        await db.collection('teachers').deleteOne({ email: userEmail });
+        // Remove from students collection
         await db.collection('students').deleteOne({ email: userEmail });
 
-        // Add to appropriate collection
-        if (role === 'teacher') {
-            await db.collection('teachers').insertOne({
-                email: userEmail,
-                createdAt: new Date()
-            });
-            return NextResponse.json({ message: 'Role switched to teacher successfully', role: 'teacher' });
-        } else if (role === 'student') {
+        // Add to appropriate collection based on current role
+        if (role === 'student') {
             await db.collection('students').insertOne({
                 email: userEmail,
                 createdAt: new Date()
             });
-            return NextResponse.json({ message: 'Role switched to student successfully', role: 'student' });
-        } else {
-            return NextResponse.json({ error: 'Invalid role specified' }, { status: 400 });
         }
-    } catch (error) {
-        console.error('Error storing user role:', error);
+        // Note: We don't remove from teachers collection - once a teacher, always can switch back
+
         return NextResponse.json({ 
-            error: 'Failed to store user role',
+            message: `Role switched to ${role} successfully`, 
+            role: role 
+        });
+    } catch (error) {
+        console.error('Error switching user role:', error);
+        return NextResponse.json({ 
+            error: 'Failed to switch user role',
             details: error.message
         }, { status: 500 });
     }

@@ -4,7 +4,10 @@ An innovative educational platform that combines traditional quizzes with intera
 
 ## Features
 
+- **Teacher Quiz Creation**: Teachers can create custom quizzes that are saved to MongoDB and accessible to all students
+- **Quiz Validation**: All questions must have correct answers that exist in the provided options
 - **Multi-AI Quiz Generation**: Support for Gemini, HuggingFace, OpenAI, OpenRouter, and Routeway API
+- **Shared Quiz Library**: Students can browse and take all quizzes created by teachers
 - **Interactive Quiz Games**: Memory, Shooting, Flappy Bird, and Catch games
 - **Chess Game**: Play against AI with 6 difficulty levels or online multiplayer
 - **User Authentication**: Secure login with Google OAuth
@@ -68,9 +71,41 @@ An innovative educational platform that combines traditional quizzes with intera
 
 ## User Roles
 
-- **Student**: Default role for new users, cannot self-promote
-- **Teacher**: Can switch between teacher and student views, assigned by admin
+- **Student**: Default role for new users, can take quizzes created by teachers, cannot self-promote
+- **Teacher**: Can create quizzes accessible to all students, can switch between teacher and student views, assigned by admin
 - **Admin**: Full control over user role management
+
+### Role Switching:
+- Only users promoted to teacher by admin can switch roles
+- Teachers can freely switch between teacher and student views
+- Regular students cannot switch to teacher role
+- Once promoted to teacher, users retain switching ability even when in student mode
+- Admin can revoke teacher status (removes switching ability)
+
+## Quiz System
+
+### For Teachers:
+1. Navigate to Teacher Dashboard → Questions
+2. Enter a quiz title (required)
+3. Create questions manually or use AI auto-generation
+4. Each question must have:
+   - Question text
+   - Exactly 4 options
+   - A correct answer that exists in the options
+5. Click "Submit This Set" to save quiz to MongoDB
+6. Quiz becomes immediately available to all students
+
+### For Students:
+1. Navigate to "Quizzes" from the menu
+2. Browse all available quizzes
+3. Click on any quiz to start
+4. Submit answers to see results and correct answers
+5. Attempts are tracked in your statistics
+
+### Default Quiz:
+- Teachers can import a pre-made quiz with 50 general knowledge questions
+- All questions are validated to ensure correct answers exist in options
+- Saved to shared quiz library for all students
 
 ## Project Structure
 

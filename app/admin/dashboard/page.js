@@ -115,13 +115,14 @@ export default function AdminDashboard() {
                   <th className="px-4 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-semibold text-gray-300">Email</th>
                   <th className="px-4 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-semibold text-gray-300">Name</th>
                   <th className="px-4 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-semibold text-gray-300">Role</th>
+                  <th className="px-4 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-semibold text-gray-300">Can Switch</th>
                   <th className="px-4 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-semibold text-gray-300">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-700">
                 {users.length === 0 ? (
                   <tr>
-                    <td colSpan="4" className="px-4 sm:px-6 py-8 text-center text-gray-400 text-sm">
+                    <td colSpan="5" className="px-4 sm:px-6 py-8 text-center text-gray-400 text-sm">
                       No users found
                     </td>
                   </tr>
@@ -138,6 +139,16 @@ export default function AdminDashboard() {
                         }`}>
                           {user.role || 'student'}
                         </span>
+                      </td>
+                      <td className="px-4 sm:px-6 py-3 sm:py-4">
+                        {user.isTeacher ? (
+                          <span className="inline-flex items-center gap-1 text-xs text-purple-400">
+                            <span>✓</span>
+                            <span>Yes</span>
+                          </span>
+                        ) : (
+                          <span className="text-xs text-gray-500">No</span>
+                        )}
                       </td>
                       <td className="px-4 sm:px-6 py-3 sm:py-4">
                         <div className="flex flex-col sm:flex-row gap-2">

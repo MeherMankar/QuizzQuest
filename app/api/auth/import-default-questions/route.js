@@ -24,19 +24,30 @@ export async function POST() {
     const fileContent = fs.readFileSync(filePath, 'utf8');
     const questions = JSON.parse(fileContent);
 
-    const finalQuestions = questions.map(({ question, ops, answer }) => ({
-      question,
-      ops,
-      answer,
-      email: session.user.email,
-      createdAt: new Date()
-    }));
+    // Validate all questions have correct answers in options
+    for (const q of questions) {
+      if (!q.answer || !q.ops || !q.ops.includes(q.answer)) {
+        return NextResponse.json({ 
+          error: `Invalid question: "${q.question}" - answer must be in options` 
+        }, { status: 400 });
+      }
+    }
 
-    const result = await db.collection('user_credentials').insertMany(finalQuestions);
+    // Create quiz from default questions
+    const quiz = {
+      title: 'General Knowledge Quiz (50 Questions)',
+      questions,
+      createdBy: session.user.email,
+      createdAt: new Date(),
+      isPublic: true
+    };
+
+    const result = await db.collection('quizzes').insertOne(quiz);
 
     return NextResponse.json({ 
-      message: 'Default questions imported successfully', 
-      count: result.insertedCount 
+      message: 'Default quiz imported successfully', 
+      count: questions.length,
+      quizId: result.insertedId
     });
   } catch (error) {
     console.error('Error importing default questions:', error);

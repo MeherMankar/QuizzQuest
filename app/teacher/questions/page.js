@@ -133,12 +133,28 @@ export default function Page() {
 
             const data = await response.json();
             if (response.ok && data.questions) {
-                const transformedQuestions = data.questions.map(apiQ => ({
-                    question: apiQ.question,
-                    options: apiQ.ops || apiQ.options || [], // Standardize to 'options'
-                    answer: apiQ.answer
-                }));
-                setQuestions(prevQuestions => [...prevQuestions, ...transformedQuestions]);
+                const transformedQuestions = data.questions.map(apiQ => {
+                    const ops = apiQ.ops || apiQ.options || [];
+                    const answer = apiQ.answer;
+                    
+                    // Validate answer is in options
+                    if (!ops.includes(answer)) {
+                        console.warn(`Question "${apiQ.question}" has invalid answer, skipping`);
+                        return null;
+                    }
+                    
+                    return {
+                        question: apiQ.question,
+                        options: ops,
+                        answer
+                    };
+                }).filter(q => q !== null); // Remove invalid questions
+                
+                if (transformedQuestions.length > 0) {
+                    setQuestions(prevQuestions => [...prevQuestions, ...transformedQuestions]);
+                } else {
+                    alert('Generated questions had invalid answers. Please try again.');
+                }
             } else {
                 console.error("Error generating questions:", data.error || "No questions returned");
                 alert("Failed to generate questions. Please try again.");
@@ -178,12 +194,9 @@ export default function Page() {
 
             const data = await response.json();
             if (response.ok) {
-                alert(`Successfully imported ${data.count} default questions!`);
-                const fetchResponse = await fetch('/api/auth/questions');
-                const fetchData = await fetchResponse.json();
-                if (fetchResponse.ok && fetchData.questions) {
-                    setQuestions(fetchData.questions);
-                }
+                alert(`Successfully imported default quiz with ${data.count} questions! All students can now access it.`);
+                setQuestions([]);
+                setQuizTitle('');
             } else {
                 alert('Failed to import questions: ' + data.error);
             }
@@ -278,7 +291,7 @@ export default function Page() {
                             onClick={handleImportDefault}
                             disabled={isImporting}
                         >
-                            {isImporting ? 'Importing...' : 'Import 50 Default Questions'}
+                            {isImporting ? 'Importing...' : 'Import Default Quiz (50 Questions)'}
                         </button>
                         {options.length > 0 && (
                             <div className="overflow-y-auto max-h-[150px] sm:max-h-[200px] w-full mt-4 space-y-1">
