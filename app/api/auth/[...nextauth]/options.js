@@ -68,8 +68,23 @@ export const options = {
         password: { label: "Password", type: "password" }
       },
       async authorize(credentials) {
+      
         if (!credentials?.email || !credentials?.password) return null;
-        
+
+        // Allow admin login using environment credentials (ADMIN_USERNAME / ADMIN_PASSWORD)
+        const adminUsername = process.env.ADMIN_USERNAME;
+        const adminPassword = process.env.ADMIN_PASSWORD;
+        if (adminUsername && adminPassword) {
+          if (credentials.email === adminUsername && credentials.password === adminPassword) {
+            return {
+              id: 'admin',
+              email: adminUsername,
+              name: 'Admin',
+              role: 'admin',
+            };
+          }
+        }
+
         const client = await clientPromise;
         const db = client.db('QuizApp_users');
         const user = await db.collection('users').findOne({ email: credentials.email });
