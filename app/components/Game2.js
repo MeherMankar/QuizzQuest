@@ -234,7 +234,7 @@ export default function MemoryQuizGame({ questionData, onGameEnd }) {
     return (
         <div className="w-full h-full flex flex-col items-center justify-center relative">
             <div className='absolute text-xl md:text-2xl p-2 w-full text-center z-10 top-2 md:top-4'>
-                <span className='bg-slate-700/70 backdrop-blur-sm text-white p-3 rounded-md shadow-lg'>
+                <span className='bg-slate-700/70 backdrop-blur-sm text-white p-3 rounded-md shadow-lg pointer-events-none'>
                     {questionText || 'Memorize the options, then select the correct one!'}
                 </span>
             </div>

@@ -206,11 +206,11 @@ export default function FlappyQuizGame({ questionData, onGameEnd }) {
       onKeyDown={(e) => { if (e.key === ' ' || e.key === 'Enter') handleUserInteraction(); }} // Accessibility
     >
       <div className='absolute top-2 md:top-4 left-1/2 -translate-x-1/2 text-center z-20 p-2'>
-        <span className='bg-black/30 backdrop-blur-sm text-white p-3 rounded-md shadow-lg text-sm md:text-lg'>
+        <span className='bg-black/30 backdrop-blur-sm text-white p-3 rounded-md shadow-lg text-sm md:text-lg pointer-events-none'>
             {questionText || 'Fly through the correct answer!'}
         </span>
       </div>
-      {!gameStarted && <p className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white text-2xl z-10 bg-black/50 p-4 rounded-lg">Tap, Click, or Press Space/Enter to Start!</p>}
+      {!gameStarted && <p className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white text-2xl z-10 bg-black/50 p-4 rounded-lg pointer-events-none">Tap, Click, or Press Space/Enter to Start!</p>}
 
       <div ref={gameAreaRef} className="w-full h-full relative">
         <div 
@@ -245,7 +245,7 @@ export default function FlappyQuizGame({ questionData, onGameEnd }) {
           </div>
         ))}
       </div>
-      <p className="absolute bottom-2 left-1/2 -translate-x-1/2 text-white text-sm z-20 bg-black/30 p-2 rounded">Tap/Click or Space/Enter to Flap!</p>
+      <p className="absolute bottom-2 left-1/2 -translate-x-1/2 text-white text-sm z-20 bg-black/30 p-2 rounded pointer-events-none">Tap/Click or Space/Enter to Flap!</p>
     </div>
   );
 }
