@@ -1,17 +1,35 @@
 import { NextResponse } from 'next/server';
 import clientPromise from '../../../../lib/mongodb';
+import { hash } from 'bcryptjs';
+
+const ADMIN_PASSWORD_HASH = '$2a$10$YourHashedPasswordHere'; // Will be generated
+
+async function verifyAdmin(username, password) {
+  const adminUsername = process.env.ADMIN_USERNAME;
+  const adminPassword = process.env.ADMIN_PASSWORD;
+  
+  if (username !== adminUsername) return false;
+  
+  // For now, use plain text comparison (will hash in production)
+  // TODO: Replace with: return await compare(password, ADMIN_PASSWORD_HASH);
+  return password === adminPassword;
+}
 
 export async function GET(req) {
   try {
     const authHeader = req.headers.get('authorization');
-    const adminUsername = process.env.ADMIN_USERNAME;
-    const adminPassword = process.env.ADMIN_PASSWORD;
+    
+    if (!authHeader || !authHeader.startsWith('Basic ')) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
 
-    if (authHeader) {
-      const [username, password] = Buffer.from(authHeader.split(' ')[1], 'base64').toString().split(':');
-      if (username !== adminUsername || password !== adminPassword) {
-        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-      }
+    const base64Credentials = authHeader.split(' ')[1];
+    const credentials = Buffer.from(base64Credentials, 'base64').toString('utf-8');
+    const [username, password] = credentials.split(':');
+
+    const isValid = await verifyAdmin(username, password);
+    if (!isValid) {
+      return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 });
     }
 
     const client = await clientPromise;
@@ -31,16 +49,18 @@ export async function GET(req) {
 export async function POST(req) {
   try {
     const authHeader = req.headers.get('authorization');
-    const adminUsername = process.env.ADMIN_USERNAME;
-    const adminPassword = process.env.ADMIN_PASSWORD;
 
-    if (!authHeader) {
+    if (!authHeader || !authHeader.startsWith('Basic ')) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const [username, password] = Buffer.from(authHeader.split(' ')[1], 'base64').toString().split(':');
-    if (username !== adminUsername || password !== adminPassword) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    const base64Credentials = authHeader.split(' ')[1];
+    const credentials = Buffer.from(base64Credentials, 'base64').toString('utf-8');
+    const [username, password] = credentials.split(':');
+
+    const isValid = await verifyAdmin(username, password);
+    if (!isValid) {
+      return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 });
     }
 
     const { email, role } = await req.json();
