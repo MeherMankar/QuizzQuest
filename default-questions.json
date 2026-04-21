@@ -1,68 +1,193 @@
 [
   {
+    "question": "What does HTML stand for?",
+    "ops": ["HyperText Markup Language", "HighText Machine Language", "HyperText and links Markup Language", "Hyper Transfer Markup Language"],
+    "answer": "HyperText Markup Language"
+  },
+  {
+    "question": "Which of the following is NOT a JavaScript data type?",
+    "ops": ["String", "Boolean", "Integer", "Undefined"],
+    "answer": "Integer"
+  },
+  {
+    "question": "What does CSS stand for?",
+    "ops": ["Cascading Style Sheets", "Computer Style Sheets", "Creative Style System", "Colorful Style Sheets"],
+    "answer": "Cascading Style Sheets"
+  },
+  {
+    "question": "Which data structure follows the LIFO principle?",
+    "ops": ["Queue", "Stack", "Linked List", "Tree"],
+    "answer": "Stack"
+  },
+  {
+    "question": "What is the time complexity of binary search?",
+    "ops": ["O(n)", "O(n²)", "O(log n)", "O(1)"],
+    "answer": "O(log n)"
+  },
+  {
+    "question": "What does SQL stand for?",
+    "ops": ["Structured Query Language", "Simple Query Language", "Standard Query Logic", "Sequential Query List"],
+    "answer": "Structured Query Language"
+  },
+  {
+    "question": "Which SQL keyword retrieves data from a table?",
+    "ops": ["GET", "FETCH", "SELECT", "RETRIEVE"],
+    "answer": "SELECT"
+  },
+  {
+    "question": "What is the purpose of the PRIMARY KEY constraint in SQL?",
+    "ops": ["Allow duplicate values", "Uniquely identify each record", "Link two tables together", "Encrypt column data"],
+    "answer": "Uniquely identify each record"
+  },
+  {
+    "question": "Which of the following is a NoSQL database?",
+    "ops": ["MySQL", "PostgreSQL", "MongoDB", "Oracle"],
+    "answer": "MongoDB"
+  },
+  {
+    "question": "In OOP, what is Encapsulation?",
+    "ops": ["Hiding internal details and exposing only functionality", "Inheriting properties from a parent class", "Creating multiple methods with the same name", "Defining abstract classes"],
+    "answer": "Hiding internal details and exposing only functionality"
+  },
+  {
+    "question": "Which keyword is used to inherit a class in Java?",
+    "ops": ["implements", "extends", "inherits", "super"],
+    "answer": "extends"
+  },
+  {
+    "question": "What is polymorphism in OOP?",
+    "ops": ["One entity having multiple forms", "A class having only one method", "Hiding data from other classes", "Creating multiple identical classes"],
+    "answer": "One entity having multiple forms"
+  },
+  {
+    "question": "What does API stand for?",
+    "ops": ["Application Programming Interface", "Application Process Integration", "Advanced Protocol Interface", "Application Program Instruction"],
+    "answer": "Application Programming Interface"
+  },
+  {
+    "question": "Which HTTP method is used to update an existing resource?",
+    "ops": ["GET", "POST", "PUT", "DELETE"],
+    "answer": "PUT"
+  },
+  {
+    "question": "What is the default port number for HTTP?",
+    "ops": ["21", "443", "80", "8080"],
+    "answer": "80"
+  },
+  {
+    "question": "What does DNS stand for?",
+    "ops": ["Domain Name System", "Data Network Service", "Digital Name Server", "Domain Navigation System"],
+    "answer": "Domain Name System"
+  },
+  {
+    "question": "What is a 404 HTTP status code?",
+    "ops": ["Server Error", "Unauthorized Access", "Not Found", "Redirect"],
+    "answer": "Not Found"
+  },
+  {
+    "question": "In Python, how do you start a single-line comment?",
+    "ops": ["//", "/* */", "#", "--"],
+    "answer": "#"
+  },
+  {
+    "question": "What is the output of print(2 ** 3) in Python?",
+    "ops": ["6", "8", "9", "5"],
+    "answer": "8"
+  },
+  {
+    "question": "Which of the following is an immutable data type in Python?",
+    "ops": ["List", "Dictionary", "Set", "Tuple"],
+    "answer": "Tuple"
+  },
+  {
+    "question": "What is the smallest unit of data in computing?",
+    "ops": ["Byte", "Kilobyte", "Bit", "Nibble"],
+    "answer": "Bit"
+  },
+  {
+    "question": "How many bits are in one byte?",
+    "ops": ["4", "8", "16", "32"],
+    "answer": "8"
+  },
+  {
+    "question": "What is the binary representation of decimal 10?",
+    "ops": ["1001", "1010", "1100", "0110"],
+    "answer": "1010"
+  },
+  {
+    "question": "Which sorting algorithm has the best average-case time complexity?",
+    "ops": ["Bubble Sort", "Insertion Sort", "Quick Sort", "Selection Sort"],
+    "answer": "Quick Sort"
+  },
+  {
+    "question": "What is the purpose of a foreign key in a relational database?",
+    "ops": ["To uniquely identify rows", "To link two tables by referencing a primary key", "To index data faster", "To compress data"],
+    "answer": "To link two tables by referencing a primary key"
+  },
+  {
+    "question": "Which normal form eliminates transitive dependencies?",
+    "ops": ["1NF", "2NF", "3NF", "BCNF"],
+    "answer": "3NF"
+  },
+  {
+    "question": "What does DBMS stand for?",
+    "ops": ["Data Backup Management System", "Database Management System", "Data Browsing Model System", "Digital Base Management System"],
+    "answer": "Database Management System"
+  },
+  {
+    "question": "Which layer of the OSI model handles routing?",
+    "ops": ["Data Link Layer", "Physical Layer", "Network Layer", "Transport Layer"],
+    "answer": "Network Layer"
+  },
+  {
+    "question": "What does LAN stand for?",
+    "ops": ["Large Area Network", "Local Area Network", "Linked Access Node", "Layered Access Network"],
+    "answer": "Local Area Network"
+  },
+  {
+    "question": "Which protocol is used to send emails?",
+    "ops": ["HTTP", "FTP", "SMTP", "TCP"],
+    "answer": "SMTP"
+  },
+  {
+    "question": "What is the primary purpose of an operating system?",
+    "ops": ["To play games", "To manage hardware and software resources", "To connect to the internet", "To compile code"],
+    "answer": "To manage hardware and software resources"
+  },
+  {
+    "question": "What is a deadlock in operating systems?",
+    "ops": ["A computer virus", "Two or more processes waiting for each other indefinitely", "When the CPU is idle", "A type of memory error"],
+    "answer": "Two or more processes waiting for each other indefinitely"
+  },
+  {
+    "question": "What is virtual memory?",
+    "ops": ["Memory used only by the GPU", "A technique that uses disk space to extend RAM", "Encrypted memory", "Memory stored in the cloud"],
+    "answer": "A technique that uses disk space to extend RAM"
+  },
+  {
+    "question": "What does 'git commit' do?",
+    "ops": ["Pushes changes to a remote repo", "Saves changes to the local repository", "Creates a new branch", "Merges two branches"],
+    "answer": "Saves changes to the local repository"
+  },
+  {
+    "question": "What does 'npm' stand for?",
+    "ops": ["Node Package Manager", "New Project Manager", "Node Program Module", "Network Package Module"],
+    "answer": "Node Package Manager"
+  },
+  {
+    "question": "In React, what is a component?",
+    "ops": ["A CSS file", "A reusable piece of UI", "A database table", "A server function"],
+    "answer": "A reusable piece of UI"
+  },
+  {
+    "question": "What is Machine Learning?",
+    "ops": ["Programming with explicit rules", "A subset of AI that enables systems to learn from data", "A type of database", "A networking protocol"],
+    "answer": "A subset of AI that enables systems to learn from data"
+  },
+  {
     "question": "What is the capital of France?",
     "ops": ["London", "Berlin", "Paris", "Madrid"],
     "answer": "Paris"
-  },
-  {
-    "question": "What is 2 + 2?",
-    "ops": ["3", "4", "5", "6"],
-    "answer": "4"
-  },
-  {
-    "question": "Who wrote 'Romeo and Juliet'?",
-    "ops": ["Charles Dickens", "William Shakespeare", "Mark Twain", "Jane Austen"],
-    "answer": "William Shakespeare"
-  },
-  {
-    "question": "What is the largest planet in our solar system?",
-    "ops": ["Earth", "Mars", "Jupiter", "Saturn"],
-    "answer": "Jupiter"
-  },
-  {
-    "question": "What is the chemical symbol for water?",
-    "ops": ["O2", "H2O", "CO2", "NaCl"],
-    "answer": "H2O"
-  },
-  {
-    "question": "In which year did World War II end?",
-    "ops": ["1943", "1944", "1945", "1946"],
-    "answer": "1945"
-  },
-  {
-    "question": "What is the smallest prime number?",
-    "ops": ["0", "1", "2", "3"],
-    "answer": "2"
-  },
-  {
-    "question": "Which continent is the Sahara Desert located in?",
-    "ops": ["Asia", "Africa", "Australia", "South America"],
-    "answer": "Africa"
-  },
-  {
-    "question": "What is the speed of light in vacuum?",
-    "ops": ["300,000 km/s", "150,000 km/s", "450,000 km/s", "600,000 km/s"],
-    "answer": "300,000 km/s"
-  },
-  {
-    "question": "Who painted the Mona Lisa?",
-    "ops": ["Vincent van Gogh", "Pablo Picasso", "Leonardo da Vinci", "Michelangelo"],
-    "answer": "Leonardo da Vinci"
-  },
-  {
-    "question": "What is the square root of 144?",
-    "ops": ["10", "11", "12", "13"],
-    "answer": "12"
-  },
-  {
-    "question": "Which programming language is known as the 'language of the web'?",
-    "ops": ["Python", "Java", "JavaScript", "C++"],
-    "answer": "JavaScript"
-  },
-  {
-    "question": "What is the boiling point of water at sea level?",
-    "ops": ["90°C", "100°C", "110°C", "120°C"],
-    "answer": "100°C"
   },
   {
     "question": "Who developed the theory of relativity?",
@@ -70,19 +195,9 @@
     "answer": "Albert Einstein"
   },
   {
-    "question": "What is the capital of Japan?",
-    "ops": ["Seoul", "Beijing", "Tokyo", "Bangkok"],
-    "answer": "Tokyo"
-  },
-  {
-    "question": "How many continents are there on Earth?",
-    "ops": ["5", "6", "7", "8"],
-    "answer": "7"
-  },
-  {
-    "question": "What is the largest ocean on Earth?",
-    "ops": ["Atlantic Ocean", "Indian Ocean", "Arctic Ocean", "Pacific Ocean"],
-    "answer": "Pacific Ocean"
+    "question": "What is the chemical symbol for water?",
+    "ops": ["O2", "H2O", "CO2", "NaCl"],
+    "answer": "H2O"
   },
   {
     "question": "What is the powerhouse of the cell?",
@@ -90,54 +205,9 @@
     "answer": "Mitochondria"
   },
   {
-    "question": "In which country is the Great Pyramid of Giza located?",
-    "ops": ["Mexico", "Egypt", "Peru", "Iraq"],
-    "answer": "Egypt"
-  },
-  {
-    "question": "What is the value of Pi (π) to two decimal places?",
-    "ops": ["3.12", "3.14", "3.16", "3.18"],
-    "answer": "3.14"
-  },
-  {
-    "question": "What is the hardest natural substance on Earth?",
-    "ops": ["Gold", "Iron", "Diamond", "Platinum"],
-    "answer": "Diamond"
-  },
-  {
-    "question": "Who was the first person to walk on the moon?",
-    "ops": ["Buzz Aldrin", "Neil Armstrong", "Yuri Gagarin", "John Glenn"],
-    "answer": "Neil Armstrong"
-  },
-  {
-    "question": "What is the main gas found in Earth's atmosphere?",
-    "ops": ["Oxygen", "Carbon Dioxide", "Nitrogen", "Hydrogen"],
-    "answer": "Nitrogen"
-  },
-  {
-    "question": "How many sides does a hexagon have?",
-    "ops": ["5", "6", "7", "8"],
-    "answer": "6"
-  },
-  {
-    "question": "What is the currency of the United Kingdom?",
-    "ops": ["Euro", "Dollar", "Pound Sterling", "Yen"],
-    "answer": "Pound Sterling"
-  },
-  {
-    "question": "What does DNA stand for?",
-    "ops": ["Deoxyribonucleic Acid", "Dinitrogen Acid", "Dynamic Nuclear Acid", "Dextrose Nucleic Acid"],
-    "answer": "Deoxyribonucleic Acid"
-  },
-  {
-    "question": "Which planet is known as the Red Planet?",
-    "ops": ["Venus", "Mars", "Mercury", "Neptune"],
-    "answer": "Mars"
-  },
-  {
-    "question": "What is the freezing point of water in Celsius?",
-    "ops": ["-10°C", "0°C", "10°C", "32°C"],
-    "answer": "0°C"
+    "question": "What is the largest planet in our solar system?",
+    "ops": ["Earth", "Mars", "Jupiter", "Saturn"],
+    "answer": "Jupiter"
   },
   {
     "question": "Who invented the telephone?",
@@ -145,108 +215,38 @@
     "answer": "Alexander Graham Bell"
   },
   {
-    "question": "What is the longest river in the world?",
-    "ops": ["Amazon River", "Nile River", "Yangtze River", "Mississippi River"],
-    "answer": "Nile River"
-  },
-  {
-    "question": "What is the chemical symbol for gold?",
-    "ops": ["Go", "Gd", "Au", "Ag"],
-    "answer": "Au"
-  },
-  {
     "question": "How many bones are in the adult human body?",
     "ops": ["196", "206", "216", "226"],
     "answer": "206"
   },
   {
-    "question": "What is the smallest country in the world?",
-    "ops": ["Monaco", "Vatican City", "San Marino", "Liechtenstein"],
-    "answer": "Vatican City"
-  },
-  {
-    "question": "What year did the Titanic sink?",
-    "ops": ["1910", "1911", "1912", "1913"],
-    "answer": "1912"
-  },
-  {
-    "question": "What is the tallest mountain in the world?",
-    "ops": ["K2", "Kangchenjunga", "Mount Everest", "Lhotse"],
-    "answer": "Mount Everest"
-  },
-  {
-    "question": "What is the primary language spoken in Brazil?",
-    "ops": ["Spanish", "Portuguese", "French", "English"],
-    "answer": "Portuguese"
-  },
-  {
-    "question": "How many planets are in our solar system?",
-    "ops": ["7", "8", "9", "10"],
-    "answer": "8"
-  },
-  {
-    "question": "What is the largest mammal in the world?",
-    "ops": ["African Elephant", "Blue Whale", "Giraffe", "Polar Bear"],
-    "answer": "Blue Whale"
-  },
-  {
-    "question": "What is the capital of Australia?",
-    "ops": ["Sydney", "Melbourne", "Canberra", "Brisbane"],
-    "answer": "Canberra"
-  },
-  {
-    "question": "Who wrote '1984'?",
-    "ops": ["Aldous Huxley", "George Orwell", "Ray Bradbury", "H.G. Wells"],
-    "answer": "George Orwell"
-  },
-  {
-    "question": "What is the atomic number of carbon?",
-    "ops": ["4", "6", "8", "12"],
-    "answer": "6"
-  },
-  {
-    "question": "In which year did the Berlin Wall fall?",
-    "ops": ["1987", "1988", "1989", "1990"],
-    "answer": "1989"
-  },
-  {
-    "question": "What is the largest desert in the world?",
-    "ops": ["Sahara Desert", "Arabian Desert", "Gobi Desert", "Antarctic Desert"],
-    "answer": "Antarctic Desert"
-  },
-  {
-    "question": "What is the formula for calculating the area of a circle?",
+    "question": "What is the formula for the area of a circle?",
     "ops": ["πr", "2πr", "πr²", "2πr²"],
     "answer": "πr²"
   },
   {
-    "question": "Who discovered penicillin?",
-    "ops": ["Marie Curie", "Louis Pasteur", "Alexander Fleming", "Jonas Salk"],
-    "answer": "Alexander Fleming"
+    "question": "Which planet is known as the Red Planet?",
+    "ops": ["Venus", "Mars", "Mercury", "Neptune"],
+    "answer": "Mars"
   },
   {
-    "question": "What is the most spoken language in the world?",
-    "ops": ["English", "Spanish", "Mandarin Chinese", "Hindi"],
-    "answer": "Mandarin Chinese"
+    "question": "What does RAM stand for?",
+    "ops": ["Read Access Memory", "Random Access Memory", "Rapid Application Memory", "Runtime Application Memory"],
+    "answer": "Random Access Memory"
   },
   {
-    "question": "What is the symbol for the element oxygen?",
-    "ops": ["O", "Ox", "O2", "Om"],
-    "answer": "O"
-  },
-  {
-    "question": "How many degrees are in a right angle?",
-    "ops": ["45", "60", "90", "180"],
-    "answer": "90"
-  },
-  {
-    "question": "What is the capital of Canada?",
-    "ops": ["Toronto", "Vancouver", "Montreal", "Ottawa"],
-    "answer": "Ottawa"
+    "question": "What does DNA stand for?",
+    "ops": ["Deoxyribonucleic Acid", "Dinitrogen Acid", "Dynamic Nuclear Acid", "Dextrose Nucleic Acid"],
+    "answer": "Deoxyribonucleic Acid"
   },
   {
     "question": "What is the process by which plants make their food?",
     "ops": ["Respiration", "Photosynthesis", "Digestion", "Fermentation"],
     "answer": "Photosynthesis"
+  },
+  {
+    "question": "Who discovered penicillin?",
+    "ops": ["Marie Curie", "Louis Pasteur", "Alexander Fleming", "Jonas Salk"],
+    "answer": "Alexander Fleming"
   }
 ]
