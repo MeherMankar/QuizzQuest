@@ -45,7 +45,7 @@ export default function AboutUs() {
     return (
         <>
             <NavBar />
-            <div className="min-h-screen bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-gray-800 via-gray-900 to-black text-white pt-24 pb-16 px-4 sm:px-8">
+            <div className="min-h-screen bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-gray-800 via-gray-900 to-black text-white pt-8 pb-16 px-4 sm:px-8">
                 <div className="max-w-5xl mx-auto">
 
                     {/* Header */}

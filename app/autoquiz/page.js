@@ -100,7 +100,6 @@ export default function AutoQuiz() {
                                 type="text"
                                 value={topic}
                                 onChange={(e) => {
-                                    console.log("Input changed:", e.target.value);
                                     setTopic(e.target.value);
                                 }}
                                 placeholder="Enter any topic (e.g., 'Quantum Physics', 'Ancient History')"
@@ -159,11 +158,8 @@ export default function AutoQuiz() {
                                     onClick={() => {
                                         setSelectedGameMode('game');
                                         // For now, just log. Later, this will redirect to a game page.
-                                        console.log("Selected game mode. Questions:", questions);
-                                        console.log("Storing questions in localStorage:", questions); // Add this line
-                                        // Store questions in localStorage for the game page
                                         localStorage.setItem('ai_quiz_questions', JSON.stringify(questions));
-                                        router.push('/play-autoquiz-game'); // Navigate to the game page
+                                        router.push('/play-autoquiz-game');
                                     }}
                                     className="w-full sm:w-auto px-6 sm:px-8 py-3 bg-purple-600 text-white rounded-lg font-semibold hover:bg-purple-500 transition-colors shadow-lg hover:shadow-purple-600/20"
                                 >

@@ -52,7 +52,7 @@ export default function Profile() {
         return (
             <>
                 <NavBar />
-                <div className="min-h-screen bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-gray-800 via-gray-900 to-black py-24 px-4">
+                <div className="min-h-screen bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-gray-800 via-gray-900 to-black py-6 px-4">
                     {/* Background orbs */}
                     <div className="pointer-events-none fixed inset-0 overflow-hidden">
                         <div className="absolute -top-40 -left-40 h-80 w-80 rounded-full bg-amber-500/10 blur-3xl" />

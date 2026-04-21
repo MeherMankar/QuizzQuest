@@ -6,10 +6,13 @@
   :root {
     --primary: 245 158 11;
     --primary-dark: 217 119 6;
+    --navbar-h: 4rem; /* 64px = h-16 */
   }
 
   body {
     @apply bg-gray-900 text-gray-50;
+    /* Prevent fixed navbar overlap on all pages */
+    padding-top: var(--navbar-h);
   }
 
   /* Custom scrollbar */
@@ -69,7 +72,12 @@
   .animate-fade-in-down {
     animation: fadeInDown 0.5s ease-out forwards;
   }
+
+  .animate-marquee {
+    animation: marquee 28s linear infinite;
+  }
 }
+
 
 @keyframes fadeIn {
   from {
@@ -100,4 +108,9 @@
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
 }
