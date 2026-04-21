@@ -114,25 +114,38 @@ export default function LandingPage() {
 
       <main className="max-w-5xl mx-auto px-4 pt-10 pb-20">
 
-        {/* Hero — intentionally off-center / editorial */}
+        {/* Hero — editorial */}
         <div className="mb-4">
-          <span className="inline-block rounded-full border border-amber-500/20 bg-amber-500/5 px-3 py-1 text-[11px] font-mono text-amber-500/80 tracking-widest uppercase mb-6">
+          <span className="inline-flex items-center gap-2 rounded-full border border-amber-500/20 bg-amber-500/5 px-3 py-1 text-[11px] font-mono text-amber-500/80 tracking-widest uppercase mb-6 animate-fade-in">
+            <span className="h-1.5 w-1.5 rounded-full bg-amber-500 animate-pulse" />
             MCA Project · Vidya Bharti Mahavidyalaya
           </span>
         </div>
 
         <div className="mb-6 max-w-3xl">
-          <h1 className="text-5xl sm:text-6xl md:text-7xl font-black leading-[1.05] tracking-tight">
+          <h1 className="text-5xl sm:text-6xl md:text-7xl font-black leading-[1.05] tracking-tight animate-slide-up">
             Stop reading.<br />
-            <em className="not-italic text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-orange-400 to-rose-400">
-              Start playing.
-            </em>
+            <span
+              className="inline-block"
+              style={{
+                backgroundImage: 'linear-gradient(135deg, #fbbf24 0%, #f97316 35%, #fb7185 65%, #a855f7 100%)',
+                backgroundSize: '200% 200%',
+                animation: 'gradShift 4s ease infinite',
+                WebkitBackgroundClip: 'text',
+                backgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                textShadow: 'none',
+                filter: 'drop-shadow(0 0 30px rgba(245,158,11,0.3))',
+              }}
+            >
+              Start&nbsp;playing.
+            </span>
           </h1>
         </div>
 
-        <p className="text-gray-500 max-w-xl text-lg leading-relaxed mb-10">
+        <p className="text-gray-500 max-w-xl text-lg leading-relaxed mb-10 animate-slide-up delay-200">
           QuizzQuest turns your syllabus into games, challenges, and competitions —
-          so you actually remember what you study.
+          so you actually <span className="text-gray-300 font-medium">remember</span> what you study.
         </p>
 
         {/* CTA */}
