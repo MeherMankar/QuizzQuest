@@ -13,6 +13,7 @@ export default function Page() {
     const [isGenerating, setIsGenerating] = useState(false);
     const [numberOfQuestions, setNumberOfQuestions] = useState(5);
     const [isImporting, setIsImporting] = useState(false);
+    const [toast, setToast] = useState(null); // { type: 'success'|'error'|'info', message }
 
     useEffect(() => {
         const fetchQuestions = async () => {
@@ -54,9 +55,14 @@ export default function Page() {
         }
     };
 
+    const showToast = (type, message) => {
+        setToast({ type, message });
+        setTimeout(() => setToast(null), 5000);
+    };
+
     const handleSubmitSet = async () => {
         if (questions.length === 0) {
-            console.warn("No questions to submit!");
+            showToast('error', 'No questions to submit!');
             return;
         }
 
@@ -77,7 +83,7 @@ export default function Page() {
 
             const data = await response.json();
             if (response.ok) {
-                console.log('Questions added successfully:', data);
+                showToast('success', `${questions.length} question(s) submitted successfully!`);
                 setQuestions([]);
             } else {
                 console.error('Error adding questions:', data.error);
@@ -194,11 +200,14 @@ export default function Page() {
 
             const data = await response.json();
             if (response.ok) {
-                alert(`Successfully imported default quiz with ${data.count} questions! All students can now access it.`);
-                setQuestions([]);
-                setQuizTitle('');
+                if (data.alreadyExists) {
+                    showToast('info', data.message);
+                } else {
+                    showToast('success', data.message);
+                    setQuestions([]);
+                }
             } else {
-                alert('Failed to import questions: ' + data.error);
+                showToast('error', 'Failed to import: ' + data.error);
             }
         } catch (error) {
             console.error('Failed to import default questions', error);
@@ -211,6 +220,18 @@ export default function Page() {
     return (
         <>
             <NavBar />
+            {/* Toast notification */}
+            {toast && (
+                <div className={`fixed top-20 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 rounded-xl border px-5 py-3.5 shadow-2xl backdrop-blur-xl text-sm font-medium transition-all ${
+                    toast.type === 'success' ? 'border-green-500/30 bg-green-500/15 text-green-300' :
+                    toast.type === 'error'   ? 'border-red-500/30 bg-red-500/15 text-red-300' :
+                                              'border-blue-500/30 bg-blue-500/15 text-blue-300'
+                }`}>
+                    <span>{toast.type === 'success' ? '✅' : toast.type === 'error' ? '❌' : 'ℹ️'}</span>
+                    <span className="max-w-sm">{toast.message}</span>
+                    <button onClick={() => setToast(null)} className="ml-2 opacity-50 hover:opacity-100">✕</button>
+                </div>
+            )}
             <div
                 style={{
                     backgroundImage: `url("/wavy_smoothed.png")`,
