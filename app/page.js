@@ -1,9 +1,9 @@
 'use client'
-import Landingpage from './components/landingapge'
+import LandingPage from './components/landingpage'
 import React from 'react';
 
 function HomePage() {
-  return <Landingpage/>
+  return <LandingPage/>
 }
 
 HomePage.displayName = 'HomePage';

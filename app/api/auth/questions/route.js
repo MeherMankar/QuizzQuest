@@ -17,9 +17,7 @@ export async function POST(req) {
     const userEmail = session.user.email;
 
     const body = await req.json();
-    console.log(body);
     const { questions } = body;
-    console.log(questions);
 
     // Format all questions to include email and createdAt fields
     const finalQuestions = questions.map(({ question, ops, answer }) => ({

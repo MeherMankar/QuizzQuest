@@ -183,8 +183,16 @@ export default function MemoryQuizGame({ questionData, onGameEnd }) {
                 const isCorrect = box.optionValue === actualCorrectAnswer;
                 
                 try {
-                    await fetch('/api/auth/verifyanswer', { /* ... */ body: JSON.stringify({ questionId: currentQuestionId, selectedAnswer: box.optionValue }) });
-                    await fetch('/api/auth/recordAnswer', { /* ... */ body: JSON.stringify({ questionId: currentQuestionId, isCorrect }) });
+                    await fetch('/api/auth/verifyanswer', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ questionId: currentQuestionId, selectedAnswer: box.optionValue }),
+                    });
+                    await fetch('/api/auth/recordAnswer', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ questionId: currentQuestionId, isCorrect }),
+                    });
                     
                     setWasCorrectInPopup(isCorrect);
                     setResultMessage(isCorrect ? 'Correct!' : 'Wrong!');
