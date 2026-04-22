@@ -35,21 +35,66 @@ export async function GET(req) {
     const client = await clientPromise;
     const db = client.db('QuizApp_users');
 
-    const users = await db.collection('users').find({}, { 
+    // Get all users from users collection
+    const usersFromCollection = await db.collection('users').find({}, { 
       projection: { email: 1, name: 1, role: 1, _id: 1 } 
     }).toArray();
 
-    // Check which users are teachers (have been promoted)
-    const teacherEmails = await db.collection('teachers').find({}, { projection: { email: 1 } }).toArray();
-    const teacherEmailSet = new Set(teacherEmails.map(t => t.email));
+    // Get all teachers
+    const teachers = await db.collection('teachers').find({}, { 
+      projection: { email: 1 } 
+    }).toArray();
 
-    // Add isTeacher flag to each user
-    const usersWithTeacherFlag = users.map(user => ({
-      ...user,
-      isTeacher: teacherEmailSet.has(user.email)
-    }));
+    // Get all students
+    const students = await db.collection('students').find({}, { 
+      projection: { email: 1 } 
+    }).toArray();
+
+    // Create a map of all users
+    const userMap = new Map();
+    const teacherEmailSet = new Set(teachers.map(t => t.email));
+
+    // Add users from users collection
+    usersFromCollection.forEach(user => {
+      userMap.set(user.email, {
+        _id: user._id,
+        email: user.email,
+        name: user.name || 'N/A',
+        role: user.role || 'student',
+        isTeacher: teacherEmailSet.has(user.email)
+      });
+    });
+
+    // Add teachers not in users collection
+    teachers.forEach(teacher => {
+      if (!userMap.has(teacher.email)) {
+        userMap.set(teacher.email, {
+          _id: teacher._id,
+          email: teacher.email,
+          name: 'N/A',
+          role: 'teacher',
+          isTeacher: true
+        });
+      }
+    });
+
+    // Add students not in users collection
+    students.forEach(student => {
+      if (!userMap.has(student.email)) {
+        userMap.set(student.email, {
+          _id: student._id,
+          email: student.email,
+          name: 'N/A',
+          role: 'student',
+          isTeacher: false
+        });
+      }
+    });
+
+    // Convert map to array
+    const allUsers = Array.from(userMap.values());
    
-    return NextResponse.json({ users: usersWithTeacherFlag });
+    return NextResponse.json({ users: allUsers });
   } catch (error) {
     console.error('Failed to fetch users:', error);
     return NextResponse.json({ error: 'Failed to fetch users' }, { status: 500 });

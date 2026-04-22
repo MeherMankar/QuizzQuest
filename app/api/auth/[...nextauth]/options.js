@@ -158,19 +158,45 @@ export const options = {
   },
   
   events: {
-    async signIn({ user, account, profile }) {
+    async signIn({ user, account, profile, isNewUser }) {
       try {
         const client = await clientPromise;
         if (!client) return;
         
         const db = client.db('QuizApp_users');
         
+        // Ensure user exists in users collection
+        const existingUser = await db.collection('users').findOne({ email: user.email });
+        
+        if (!existingUser) {
+          // Add user to users collection if not exists
+          await db.collection('users').insertOne({
+            email: user.email,
+            name: user.name || 'N/A',
+            image: user.image,
+            role: 'student', // Default role
+            createdAt: new Date()
+          });
+        }
+        
         const teacher = await db.collection('teachers').findOne({ email: user.email });
         const student = await db.collection('students').findOne({ email: user.email });
         
         if (teacher) {
           user.role = 'teacher';
+          // Update role in users collection
+          await db.collection('users').updateOne(
+            { email: user.email },
+            { $set: { role: 'teacher' } }
+          );
         } else if (student) {
+          user.role = 'student';
+        } else {
+          // If not in any role collection, add to students
+          await db.collection('students').insertOne({
+            email: user.email,
+            createdAt: new Date()
+          });
           user.role = 'student';
         }
       } catch (error) {
