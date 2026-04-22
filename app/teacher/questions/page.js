@@ -41,18 +41,26 @@ export default function Page() {
     };
 
     const handleProblem = () => {
-        if (correctAnswer.trim() !== '' && options.length === 4 && question.trim() !== '') {
-            setQuestions(prevQuestions => [
-                ...prevQuestions,
-                { question, options: options.slice(), answer: correctAnswer }
-            ]);
-
-            setTimeout(() => {
-                setOptions([]);
-                setQuestion('');
-                setCorrectAnswer('');
-            }, 100);
+        if (correctAnswer.trim() === '' || options.length !== 4 || question.trim() === '') {
+            showToast('error', 'Please fill in question, 4 options, and correct answer');
+            return;
         }
+        
+        if (!options.includes(correctAnswer)) {
+            showToast('error', 'Correct answer must be one of the 4 options!');
+            return;
+        }
+
+        setQuestions(prevQuestions => [
+            ...prevQuestions,
+            { question, options: options.slice(), answer: correctAnswer }
+        ]);
+
+        setTimeout(() => {
+            setOptions([]);
+            setQuestion('');
+            setCorrectAnswer('');
+        }, 100);
     };
 
     const showToast = (type, message) => {
@@ -121,9 +129,23 @@ export default function Page() {
         }
     };
 
+    const handleDeleteQuestion = (index) => {
+        setQuestions(prevQuestions => prevQuestions.filter((_, i) => i !== index));
+        showToast('info', 'Question removed');
+    };
+
+    const handleEditQuestion = (index) => {
+        const q = questions[index];
+        setQuestion(q.question);
+        setOptions(q.options);
+        setCorrectAnswer(q.answer);
+        handleDeleteQuestion(index);
+        showToast('info', 'Question loaded for editing');
+    };
+
     const handleAutoGenerate = async () => {
         if (!topic.trim()) {
-            alert("Please enter a topic first!");
+            showToast('error', 'Please enter a topic first!');
             return;
         }
 
@@ -139,35 +161,42 @@ export default function Page() {
 
             const data = await response.json();
             if (response.ok && data.questions) {
+                let validCount = 0;
+                let invalidCount = 0;
+                
                 const transformedQuestions = data.questions.map(apiQ => {
                     const ops = apiQ.ops || apiQ.options || [];
                     const answer = apiQ.answer;
                     
                     // Validate answer is in options
-                    if (!ops.includes(answer)) {
-                        console.warn(`Question "${apiQ.question}" has invalid answer, skipping`);
+                    if (!ops.includes(answer) || ops.length !== 4) {
+                        invalidCount++;
+                        console.warn(`Question "${apiQ.question}" has invalid answer or wrong number of options`);
                         return null;
                     }
                     
+                    validCount++;
                     return {
                         question: apiQ.question,
                         options: ops,
-                        answer
+                        answer,
+                        isAIGenerated: true
                     };
-                }).filter(q => q !== null); // Remove invalid questions
+                }).filter(q => q !== null);
                 
                 if (transformedQuestions.length > 0) {
                     setQuestions(prevQuestions => [...prevQuestions, ...transformedQuestions]);
+                    showToast('success', `Generated ${validCount} valid question(s). ${invalidCount > 0 ? `Skipped ${invalidCount} invalid.` : ''} Please review before submitting!`);
                 } else {
-                    alert('Generated questions had invalid answers. Please try again.');
+                    showToast('error', 'All generated questions were invalid. Please try again.');
                 }
             } else {
                 console.error("Error generating questions:", data.error || "No questions returned");
-                alert("Failed to generate questions. Please try again.");
+                showToast('error', 'Failed to generate questions. Please try again.');
             }
         } catch (error) {
             console.error("Failed to generate questions", error);
-            alert("Failed to generate questions. Please try again.");
+            showToast('error', 'Failed to generate questions. Please try again.');
         } finally {
             setIsGenerating(false);
         }
@@ -248,6 +277,12 @@ export default function Page() {
                     <div className="flex flex-col items-center bg-black text-white rounded-lg shadow-lg p-6 sm:p-8 w-full max-w-xl lg:max-w-2xl">
                         {/* Auto-generate section */}
                         <div className="flex flex-col w-full mb-4 space-y-2">
+                            <div className="bg-yellow-900/20 border border-yellow-500/30 rounded-lg p-3 mb-2">
+                                <p className="text-yellow-300 text-xs sm:text-sm flex items-start gap-2">
+                                    <span className="text-lg">⚠️</span>
+                                    <span><strong>Note:</strong> AI-generated quizzes may contain errors. Always review questions, options, and answers before submitting!</span>
+                                </p>
+                            </div>
                             <input
                                 value={topic}
                                 onChange={(e) => setTopic(e.target.value)}
@@ -325,21 +360,70 @@ export default function Page() {
                         )}
                         {questions.length > 0 && (
                             <div className="mt-5 w-full space-y-3">
-                                {questions.map((q, index) => (
-                                    <div className="flex flex-col text-white rounded-md p-3 sm:p-4 border border-gray-700" key={index}>
-                                        <div className="text-md sm:text-lg font-semibold text-yellow-300"><strong>Question:</strong> {q.question || 'N/A'}</div>
-                                        <ul className="flex flex-col space-y-1 mt-2 text-sm sm:text-base">
-                                            {q.options && Array.isArray(q.options) ? (
-                                                q.options.map((option, i) => (
-                                                    <li className="p-1" key={i}>{i + 1}. {option}</li>
-                                                ))
-                                            ) : (
-                                                <li className="p-1 text-gray-400">No options available.</li>
+                                <div className="flex justify-between items-center mb-2">
+                                    <h3 className="text-lg font-semibold text-yellow-400">Review Questions ({questions.length})</h3>
+                                    <button 
+                                        onClick={() => setQuestions([])} 
+                                        className="text-xs text-red-400 hover:text-red-300"
+                                    >
+                                        Clear All
+                                    </button>
+                                </div>
+                                {questions.map((q, index) => {
+                                    const isValid = q.options?.length === 4 && q.options.includes(q.answer);
+                                    return (
+                                        <div className={`flex flex-col text-white rounded-md p-3 sm:p-4 border ${
+                                            isValid ? 'border-gray-700' : 'border-red-500/50 bg-red-900/10'
+                                        }`} key={index}>
+                                            <div className="flex justify-between items-start mb-2">
+                                                <div className="flex-1">
+                                                    <div className="text-md sm:text-lg font-semibold text-yellow-300 flex items-start gap-2">
+                                                        <strong>Q{index + 1}:</strong> 
+                                                        <span className="flex-1">{q.question || 'N/A'}</span>
+                                                        {q.isAIGenerated && (
+                                                            <span className="text-xs bg-blue-500/20 text-blue-300 px-2 py-0.5 rounded">AI</span>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                                <div className="flex gap-2 ml-2">
+                                                    <button
+                                                        onClick={() => handleEditQuestion(index)}
+                                                        className="text-blue-400 hover:text-blue-300 text-xs"
+                                                        title="Edit"
+                                                    >
+                                                        ✏️
+                                                    </button>
+                                                    <button
+                                                        onClick={() => handleDeleteQuestion(index)}
+                                                        className="text-red-400 hover:text-red-300 text-xs"
+                                                        title="Delete"
+                                                    >
+                                                        🗑️
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <ul className="flex flex-col space-y-1 mt-2 text-sm sm:text-base">
+                                                {q.options && Array.isArray(q.options) ? (
+                                                    q.options.map((option, i) => (
+                                                        <li className={`p-1 ${
+                                                            option === q.answer ? 'text-green-400 font-semibold' : ''
+                                                        }`} key={i}>
+                                                            {i + 1}. {option} {option === q.answer && '✓'}
+                                                        </li>
+                                                    ))
+                                                ) : (
+                                                    <li className="p-1 text-gray-400">No options available.</li>
+                                                )}
+                                            </ul>
+                                            {!isValid && (
+                                                <div className="mt-2 text-xs text-red-400 flex items-center gap-1">
+                                                    <span>⚠️</span>
+                                                    <span>Invalid: {q.options?.length !== 4 ? 'Must have 4 options. ' : ''}{!q.options?.includes(q.answer) ? 'Answer not in options.' : ''}</span>
+                                                </div>
                                             )}
-                                        </ul>
-                                        <div className="text-sm text-green-400 mt-1">Correct: {q.answer || 'N/A'}</div>
-                                    </div>
-                                ))}
+                                        </div>
+                                    );
+                                })}
                             </div>
                         )}
                     </div>
