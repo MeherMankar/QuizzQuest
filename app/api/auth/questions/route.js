@@ -59,13 +59,12 @@ export async function GET() {
     let questions;
 
     if (isTeacher) {
-      // If the user is a teacher, return all questions (or any specific logic you want for teachers)
+      // Teachers see only their own questions with answers
       questions = await db.collection('user_credentials').find({ email: userEmail }).toArray();
     } else if (isStudent) {
-      // If the user is a student, return questions filtered by email and exclude the answer
+      // Students see ALL questions from ALL teachers (questions include answer field for verification)
       questions = await db.collection('user_credentials')
-        .find({ email: userEmail })
-        .project({ answer: 0 }) // Exclude the answer field
+        .find({})
         .toArray();
     } else {
       return NextResponse.json({ error: 'User role not recognized' }, { status: 403 });
