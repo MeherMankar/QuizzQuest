@@ -66,13 +66,19 @@ export default function Profile() {
                             <div className="flex flex-col items-center mb-8">
                                 <div className="relative mb-4">
                                     <div className="absolute inset-0 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 blur-md opacity-40 scale-110" />
-                                    <Image
-                                        height={96}
-                                        width={96}
-                                        src={session.user.image}
-                                        alt={`${session.user.name}'s profile picture`}
-                                        className="relative rounded-full border-4 border-amber-500/50 shadow-xl"
-                                    />
+                                    {session.user.image ? (
+                                        <Image
+                                            height={96}
+                                            width={96}
+                                            src={session.user.image}
+                                            alt={`${session.user.name}'s profile picture`}
+                                            className="relative rounded-full border-4 border-amber-500/50 shadow-xl"
+                                        />
+                                    ) : (
+                                        <div className="relative h-24 w-24 rounded-full border-4 border-amber-500/50 shadow-xl bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center text-4xl font-bold text-white">
+                                            {session.user.name?.charAt(0).toUpperCase() || '?'}
+                                        </div>
+                                    )}
                                     <div className="absolute bottom-1 right-1 h-4 w-4 rounded-full bg-green-500 border-2 border-gray-900 shadow" />
                                 </div>
                                 <h2 className="text-2xl font-bold text-white mb-1">{session.user.name}</h2>
