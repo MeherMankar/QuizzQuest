@@ -15,9 +15,11 @@ export async function POST(req) {
         const { answers } = body;
         const client = await clientPromise;
         const db = client.db("QuizApp_users");
+        const userEmail = session.user.email;
 
         let correctCount = 0;
         const results = {};
+        const totalQuestions = Object.keys(answers).length;
 
         // Process each answer
         for (const [questionId, selectedAnswer] of Object.entries(answers)) {
@@ -42,6 +44,20 @@ export async function POST(req) {
                 userAnswer: selectedAnswer
             };
         }
+
+        const scorePercentage = totalQuestions > 0 ? Math.round((correctCount / totalQuestions) * 100) : 0;
+
+        // Save quiz attempt to quiz_attempts collection
+        await db.collection('quiz_attempts').insertOne({
+            userEmail,
+            quizTitle: 'Teacher Quiz',
+            category: 'General',
+            score: scorePercentage,
+            correctAnswers: correctCount,
+            totalQuestions,
+            completedAt: new Date(),
+            timeTaken: 0
+        });
 
         return NextResponse.json({ 
             score: correctCount,
