@@ -1,6 +1,6 @@
 # QuizzQuest - Interactive Learning Platform
 
-An innovative educational platform that combines traditional quizzes with interactive games to make learning more engaging and enjoyable.
+An innovative educational platform that combines traditional quizzes with AI-powered quiz generation and strategic chess gameplay.
 
 ## Features
 
@@ -8,7 +8,6 @@ An innovative educational platform that combines traditional quizzes with intera
 - **Quiz Validation**: All questions must have correct answers that exist in the provided options
 - **Multi-AI Quiz Generation**: Support for Gemini, HuggingFace, OpenAI, OpenRouter, and Routeway API
 - **Shared Quiz Library**: Students can browse and take all quizzes created by teachers
-- **Interactive Quiz Games**: Memory, Shooting, Flappy Bird, and Catch games
 - **Chess Game**: Play against AI with 6 difficulty levels or online multiplayer
 - **User Authentication**: Secure login with Google OAuth
 - **Role-Based Access**: Separate interfaces for students and teachers
@@ -24,7 +23,7 @@ An innovative educational platform that combines traditional quizzes with intera
 - **Authentication**: NextAuth.js (Google OAuth)
 - **AI Providers**: Gemini, HuggingFace, OpenAI, OpenRouter, Routeway
 - **Chess Engine**: Stockfish.js
-- **Game Logic**: Kaboom.js, chess.js, react-chessboard
+- **Chess UI**: chess.js, react-chessboard
 
 ## Quick Setup
 

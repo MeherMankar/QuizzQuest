@@ -14,7 +14,7 @@ export default function AutoQuiz() {
     const [quizCompleted, setQuizCompleted] = useState(false);
     const [score, setScore] = useState(0);
     const [error, setError] = useState('');
-    const [selectedGameMode, setSelectedGameMode] = useState(null); // 'standard' or 'game'
+    const [selectedGameMode, setSelectedGameMode] = useState('standard');
     const [selectedModel, setSelectedModel] = useState("gemini"); // Default AI provider
 
     const availableModels = [
@@ -26,7 +26,6 @@ export default function AutoQuiz() {
     ];
 
     const generateQuiz = async () => {
-        setSelectedGameMode(null); // Reset game mode selection
         setIsLoading(true);
         setError('');
         try {
@@ -44,7 +43,7 @@ export default function AutoQuiz() {
                 setCurrentQuestionIndex(0);
                 setQuizCompleted(false);
                 setScore(0);
-                // setSelectedGameMode(null); // User will choose after generation
+                setSelectedGameMode('standard');
             } else {
                 setError(data.error || 'Failed to generate quiz. Please try again.');
                 setQuestions(null); // Clear any old questions on error
@@ -143,35 +142,7 @@ export default function AutoQuiz() {
                         )}
                     </motion.div>
 
-                    {questions && !selectedGameMode && !quizCompleted && (
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.2 }}
-                            className="bg-gray-800/50 backdrop-blur-lg rounded-xl p-6 sm:p-8 mb-8 shadow-xl text-center"
-                        >
-                            <h2 className="text-xl sm:text-2xl font-semibold mb-6">Quiz Ready! How do you want to proceed?</h2>
-                            <div className="flex flex-col sm:flex-row justify-center gap-4 sm:gap-6">
-                                <button
-                                    onClick={() => setSelectedGameMode('standard')}
-                                    className="w-full sm:w-auto px-6 sm:px-8 py-3 bg-yellow-500 text-gray-900 rounded-lg font-semibold hover:bg-yellow-400 transition-colors shadow-lg hover:shadow-yellow-500/20"
-                                >
-                                    Start Standard Quiz
-                                </button>
-                                <button
-                                    onClick={() => {
-                                        setSelectedGameMode('game');
-                                        // For now, just log. Later, this will redirect to a game page.
-                                        localStorage.setItem('ai_quiz_questions', JSON.stringify(questions));
-                                        router.push('/play-autoquiz-game');
-                                    }}
-                                    className="w-full sm:w-auto px-6 sm:px-8 py-3 bg-purple-600 text-white rounded-lg font-semibold hover:bg-purple-500 transition-colors shadow-lg hover:shadow-purple-600/20"
-                                >
-                                    Play a Game
-                                </button>
-                            </div>
-                        </motion.div>
-                    )}
+
 
                     {questions && selectedGameMode === 'standard' && !quizCompleted && (
                         <motion.div
@@ -331,7 +302,6 @@ export default function AutoQuiz() {
                                         setUserAnswers({});
                                         setQuizCompleted(false);
                                         setTopic('');
-                                        setSelectedGameMode(null); // Reset game mode
                                     }}
                                     className="px-6 sm:px-8 py-3 bg-yellow-500 text-gray-900 rounded-lg font-semibold hover:bg-yellow-400 transition-colors shadow-lg hover:shadow-yellow-500/20"
                                 >

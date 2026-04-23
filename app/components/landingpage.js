@@ -6,9 +6,9 @@ import { signIn, useSession } from "next-auth/react";
 import { useState, useEffect } from 'react';
 
 const TICKER_ITEMS = [
-  'Interactive Games', 'AI-Powered Quizzes', 'Chess Arena', 
+  'AI-Powered Quizzes', 'Chess Arena', 
   'Leaderboards', 'Progress Tracking', 'Teacher Dashboard',
-  'Memory Challenges', 'Auto Quiz', 'Real-time Stats',
+  'Auto Quiz', 'Real-time Stats',
 ];
 
 function Ticker() {
@@ -27,12 +27,6 @@ function Ticker() {
 }
 
 const FEATURES = [
-  {
-    icon: '🎮',
-    title: 'Four Game Modes',
-    body: 'Catch the Answer, Memory Cards, Classic MCQ, and Snake Quiz — each teaching the same content differently.',
-    accent: 'border-l-amber-500',
-  },
   {
     icon: '🤖',
     title: 'AI Quiz Generator',
@@ -137,7 +131,7 @@ export default function LandingPage() {
         </div>
 
         <p className="text-gray-500 max-w-xl text-lg leading-relaxed mb-10 animate-slide-up delay-200">
-          QuizzQuest turns your syllabus into games, challenges, and competitions —
+          QuizzQuest turns your syllabus into quizzes and challenges —
           so you actually <span className="text-gray-300 font-medium">remember</span> what you study.
         </p>
 
@@ -168,16 +162,16 @@ export default function LandingPage() {
               {role === 'student' && (
                 <>
                   <button
-                    onClick={() => router.push('/solvingarea')}
+                    onClick={() => router.push('/quizzes')}
                     className="rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 px-7 py-3.5 font-bold text-gray-950 shadow-lg shadow-amber-500/20 transition-all hover:scale-105 text-sm"
                   >
-                    🎮 Play now →
+                    📚 Browse quizzes →
                   </button>
                   <button
-                    onClick={() => router.push('/quizzes')}
+                    onClick={() => router.push('/autoquiz')}
                     className="rounded-xl border border-white/10 px-7 py-3.5 font-medium text-gray-400 text-sm transition-all hover:border-white/20 hover:text-white"
                   >
-                    Browse quizzes
+                    Try AI quiz
                   </button>
                 </>
               )}
@@ -215,7 +209,7 @@ export default function LandingPage() {
         <div className="mb-14">
           <div className="flex items-baseline gap-4 mb-6">
             <h2 className="text-2xl font-black text-white">What's inside</h2>
-            <span className="text-xs font-mono text-gray-700">6 features</span>
+            <span className="text-xs font-mono text-gray-700">5 features</span>
           </div>
 
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">

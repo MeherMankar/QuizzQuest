@@ -85,16 +85,11 @@ export default function Component() {
               </span>
             </h1>
             <p className="mx-auto max-w-2xl text-lg text-gray-400 sm:text-xl">
-              Transform learning into an adventure with interactive quizzes and games
+              Master your knowledge with AI-powered quizzes and strategic chess
             </p>
           </div>
 
-          <div className="mb-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            <div className="rounded-lg border border-gray-800 bg-gray-900/50 p-6 transition-colors hover:border-gray-700">
-              <div className="mb-3 text-3xl">🎮</div>
-              <h3 className="mb-2 text-lg font-semibold text-amber-400">Interactive Games</h3>
-              <p className="text-sm text-gray-400">Solve quizzes through engaging games that make learning fun and memorable</p>
-            </div>
+          <div className="mb-16 grid gap-6 sm:grid-cols-2">
             <div className="rounded-lg border border-gray-800 bg-gray-900/50 p-6 transition-colors hover:border-gray-700">
               <div className="mb-3 text-3xl">📚</div>
               <h3 className="mb-2 text-lg font-semibold text-purple-400">Smart Quizzes</h3>
