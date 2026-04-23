@@ -68,7 +68,7 @@ export default function AutoQuiz() {
         let correctAnswers = 0;
         questions.forEach((question, index) => {
             const selectedAnswer = userAnswers[index];
-            const correctAnswer = question.ops.indexOf(question.answer);
+            const correctAnswer = typeof question.answerIndex === 'number' ? question.answerIndex : question.ops.indexOf(question.answer);
             if (selectedAnswer === correctAnswer) {
                 correctAnswers++;
             }
@@ -76,6 +76,10 @@ export default function AutoQuiz() {
         setScore(correctAnswers);
         setQuizCompleted(true);
     };
+
+    // Percentage for result ring (safe guard when questions is null/empty)
+    const percent = questions && questions.length ? Math.round((score / questions.length) * 100) : 0;
+    const dash = questions && questions.length ? (score / questions.length) * 100 : 0;
 
     return (
         <>
@@ -256,26 +260,21 @@ export default function AutoQuiz() {
                             <h2 className="text-2xl sm:text-3xl font-bold text-center mb-6 sm:mb-8">Quiz Results</h2>
                             <div className="flex justify-center items-center mb-6 sm:mb-8">
                                 <div className="relative">
-                                    <svg className="w-24 h-24 sm:w-32 sm:h-32" viewBox="0 0 36 36">
-                                        <path
-                                            d="M18 2.0845
-                                                a 15.9155 15.9155 0 0 1 0 31.831
-                                                a 15.9155 15.9155 0 0 1 0 -31.831"
+                                    <svg className="w-24 h-24 sm:w-32 sm:h-32" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
+                                        <circle cx="18" cy="18" r="15.9155" fill="none" stroke="#4B5563" strokeWidth="3" />
+                                        <circle
+                                            cx="18"
+                                            cy="18"
+                                            r="15.9155"
                                             fill="none"
-                                            stroke="#4B5563" // gray-600
+                                            stroke="#EAB308"
                                             strokeWidth="3"
+                                            strokeLinecap="round"
+                                            strokeDasharray={`${dash} 100`}
+                                            transform="rotate(-90 18 18)"
                                         />
-                                        <path
-                                            d="M18 2.0845
-                                                a 15.9155 15.9155 0 0 1 0 31.831
-                                                a 15.9155 15.9155 0 0 1 0 -31.831"
-                                            fill="none"
-                                            stroke="#EAB308" // yellow-500
-                                            strokeWidth="3"
-                                            strokeDasharray={`${(score / questions.length) * 100}, 100`}
-                                        />
-                                        <text x="18" y="20.35" className="text-3xl sm:text-5xl font-bold" textAnchor="middle" fill="white">
-                                            {Math.round((score / questions.length) * 100)}%
+                                        <text x="18" y="18" textAnchor="middle" dominantBaseline="middle" fill="white" style={{ fontSize: '0.95rem', fontWeight: 700 }}>
+                                            {percent}%
                                         </text>
                                     </svg>
                                 </div>
@@ -286,7 +285,7 @@ export default function AutoQuiz() {
                             <div className="space-y-4 sm:space-y-6">
                                 {questions.map((question, idx) => {
                                     const selectedAnswer = userAnswers[idx];
-                                    const correctAnswer = question.ops.indexOf(question.answer);
+                                    const correctAnswer = typeof question.answerIndex === 'number' ? question.answerIndex : question.ops.indexOf(question.answer);
                                     const isCorrect = selectedAnswer === correctAnswer;
 
                                     return (

@@ -115,13 +115,6 @@ export default function LandingPage() {
       <main className="max-w-5xl mx-auto px-4 pt-10 pb-20">
 
         {/* Hero — editorial */}
-        <div className="mb-4">
-          <span className="inline-flex items-center gap-2 rounded-full border border-amber-500/20 bg-amber-500/5 px-3 py-1 text-[11px] font-mono text-amber-500/80 tracking-widest uppercase mb-6 animate-fade-in">
-            <span className="h-1.5 w-1.5 rounded-full bg-amber-500 animate-pulse" />
-            MCA Project · Vidya Bharti Mahavidyalaya
-          </span>
-        </div>
-
         <div className="mb-6 max-w-3xl">
           <h1 className="text-5xl sm:text-6xl md:text-7xl font-black leading-[1.05] tracking-tight animate-slide-up">
             Stop reading.<br />

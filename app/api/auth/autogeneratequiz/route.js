@@ -58,6 +58,7 @@ export async function POST(req) {
             question: q.question,
             ops: q.options,
             answer: q.options[q.answer],
+            answerIndex: typeof q.answer === 'number' ? q.answer : q.options.indexOf(q.answer)
         }));
 
         // Save to database
