@@ -21,13 +21,19 @@ function ProfileContent() {
         <NavBar />
         <div className="flex flex-col items-center p-6 bg-calm-100 text-gray-700 rounded-lg shadow-lg w-full h-screen mx-auto">
           <div className="flex flex-col items-center">
-            <Image
-              height={80}
-              width={80}
-              src={`${session.user.image}`}
-              alt={`${session.user.email}'s profile picture`}
-              className="rounded-full border-4 border-gray-700 mb-4"
-            />
+            {session.user.image ? (
+              <Image
+                height={80}
+                width={80}
+                src={session.user.image}
+                alt={`${session.user.email}'s profile picture`}
+                className="rounded-full border-4 border-gray-700 mb-4"
+              />
+            ) : (
+              <div className="h-20 w-20 rounded-full border-4 border-gray-700 mb-4 bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center text-3xl font-bold text-white">
+                {session.user.name?.charAt(0).toUpperCase() || '?'}
+              </div>
+            )}
             <h2 className="text-xl font-semibold">{session.user.name}</h2>
           </div>
 
