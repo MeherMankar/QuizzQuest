@@ -4,62 +4,7 @@ import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import NavBar from '../components/NavBar';
 
-const GAME_MODES = [
-  {
-    id: 'catch',
-    emoji: '🧺',
-    title: 'Catch the Answer',
-    description: 'Move your basket to catch falling correct answers before time runs out.',
-    difficulty: 'Easy',
-    diffColor: 'text-green-400 bg-green-500/10 border-green-500/20',
-    cardGlow: 'hover:border-green-500/50 hover:shadow-green-500/10',
-    tag: 'Reflexes',
-    time: '30s',
-  },
-  {
-    id: 'memory',
-    emoji: '🧠',
-    title: 'Memory Quiz',
-    description: 'Memorise the answer cards — then find the correct one after they flip!',
-    difficulty: 'Medium',
-    diffColor: 'text-amber-400 bg-amber-500/10 border-amber-500/20',
-    cardGlow: 'hover:border-amber-500/50 hover:shadow-amber-500/10',
-    tag: 'Memory',
-    time: '60s',
-  },
-  {
-    id: 'mcq',
-    emoji: '📝',
-    title: 'Classic MCQ',
-    description: 'Traditional multiple-choice quiz. Read carefully and pick the right answer.',
-    difficulty: 'Easy',
-    diffColor: 'text-blue-400 bg-blue-500/10 border-blue-500/20',
-    cardGlow: 'hover:border-blue-500/50 hover:shadow-blue-500/10',
-    tag: 'Knowledge',
-    time: 'Untimed',
-  },
-  {
-    id: 'snake',
-    emoji: '🐍',
-    title: 'Snake Quiz',
-    description: 'Guide the snake to eat the correct answer. Wrong ones shrink you!',
-    difficulty: 'Hard',
-    diffColor: 'text-rose-400 bg-rose-500/10 border-rose-500/20',
-    cardGlow: 'hover:border-rose-500/50 hover:shadow-rose-500/10',
-    tag: 'Strategy',
-    time: '45s',
-  },
-];
-
 const QUICK_ACTIONS = [
-  {
-    icon: '⚡',
-    label: 'Quick Play',
-    sub: 'Random game, random topic',
-    color: 'from-amber-500 to-orange-500',
-    shadow: 'shadow-amber-500/20 hover:shadow-amber-500/40',
-    path: '/solvingarea',
-  },
   {
     icon: '🤖',
     label: 'AI Quiz',
@@ -119,7 +64,7 @@ export default function QuizzesPage() {
           </div>
 
           {/* Quick actions */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-10">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-10">
             {QUICK_ACTIONS.map((action) => (
               <button
                 key={action.label}
@@ -137,54 +82,6 @@ export default function QuizzesPage() {
             ))}
           </div>
 
-          {/* Divider */}
-          <div className="flex items-center gap-4 mb-8">
-            <div className="h-px flex-1 bg-white/5" />
-            <span className="text-xs text-gray-600 font-mono uppercase tracking-widest">Game Modes</span>
-            <div className="h-px flex-1 bg-white/5" />
-          </div>
-
-          {/* Game modes */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {GAME_MODES.map((mode) => (
-              <div
-                key={mode.id}
-                className={`group relative rounded-2xl border border-white/5 bg-gray-900/80 p-6 cursor-pointer transition-all duration-200 hover:scale-[1.015] shadow-xl ${mode.cardGlow} hover:shadow-xl`}
-                onClick={() => router.push('/solvingarea')}
-              >
-                {/* Top row */}
-                <div className="flex items-start justify-between mb-4">
-                  <div className="text-4xl">{mode.emoji}</div>
-                  <div className="flex gap-2">
-                    <span className={`text-[11px] font-semibold px-2.5 py-0.5 rounded-full border ${mode.diffColor}`}>
-                      {mode.difficulty}
-                    </span>
-                    <span className="text-[11px] font-semibold px-2.5 py-0.5 rounded-full border border-white/10 text-gray-500">
-                      {mode.time}
-                    </span>
-                  </div>
-                </div>
-
-                <h3 className="text-lg font-bold text-white mb-1">{mode.title}</h3>
-                <p className="text-sm text-gray-500 leading-relaxed mb-4">{mode.description}</p>
-
-                <div className="flex items-center justify-between">
-                  <span className="inline-flex items-center gap-1.5 text-xs text-gray-600">
-                    <span className="h-1.5 w-1.5 rounded-full bg-gray-700" />
-                    {mode.tag}
-                  </span>
-                  <span className="text-xs text-gray-600 group-hover:text-amber-400 transition-colors font-medium">
-                    Play now →
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Footer tip */}
-          <p className="mt-8 text-center text-xs text-gray-700">
-            💡 Quick Play selects a game mode and topic randomly — perfect when you can't decide!
-          </p>
         </div>
       </div>
     </>
