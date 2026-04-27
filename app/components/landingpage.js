@@ -6,9 +6,8 @@ import { signIn, useSession } from "next-auth/react";
 import { useState, useEffect } from 'react';
 
 const TICKER_ITEMS = [
-  'AI-Powered Quizzes', 'Chess Arena', 
-  'Leaderboards', 'Progress Tracking', 'Teacher Dashboard',
-  'Auto Quiz', 'Real-time Stats',
+  'AI-Powered Quizzes', 'Chess Arena',
+  'Teacher Dashboard', 'Auto Quiz', 'Progress Tracking',
 ];
 
 function Ticker() {
@@ -38,18 +37,6 @@ const FEATURES = [
     title: 'Chess Arena',
     body: 'Take a break with chess puzzles and games built right into the platform.',
     accent: 'border-l-green-500',
-  },
-  {
-    icon: '📊',
-    title: 'Live Statistics',
-    body: 'See your scores, accuracy, rank, and achievement badges update in real time.',
-    accent: 'border-l-blue-500',
-  },
-  {
-    icon: '🏆',
-    title: 'Leaderboard',
-    body: 'Compete with classmates and climb the rankings. Top 3 get medal badges.',
-    accent: 'border-l-rose-500',
   },
   {
     icon: '👩‍🏫',
@@ -209,7 +196,7 @@ export default function LandingPage() {
         <div className="mb-14">
           <div className="flex items-baseline gap-4 mb-6">
             <h2 className="text-2xl font-black text-white">What's inside</h2>
-            <span className="text-xs font-mono text-gray-700">5 features</span>
+            <span className="text-xs font-mono text-gray-700">3 features</span>
           </div>
 
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">

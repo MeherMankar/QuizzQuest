@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHome, faBars, faTimes, faRankingStar, faGamepad, faChess, faUser, faInfoCircle, faSignOutAlt, faClipboardList, faChartBar } from '@fortawesome/free-solid-svg-icons';
+import { faHome, faBars, faTimes, faGamepad, faChess, faUser, faInfoCircle, faSignOutAlt, faClipboardList } from '@fortawesome/free-solid-svg-icons';
 import { signOut, useSession } from 'next-auth/react';
 
 export default function NavBar() {
@@ -85,8 +85,6 @@ export default function NavBar() {
     const navigationItems = [
         { label: 'Home',      icon: faHome,          path: '/',          action: () => router.push('/') },
         { label: 'Quizzes',   icon: faClipboardList, path: '/quizzes',   action: () => router.push('/quizzes') },
-        { label: 'Rankings',  icon: faRankingStar,   path: '/rankings',  action: () => router.push('/rankings') },
-        { label: 'Statistics',icon: faChartBar,      path: '/statistics',action: () => router.push('/statistics') },
         { label: 'Auto Quiz', icon: faGamepad,       path: '/autoquiz',  action: () => router.push('/autoquiz') },
         { label: 'Chess',     icon: faChess,         path: '/chess',     action: () => router.push('/chess') },
         { label: 'Profile',   icon: faUser,          path: '/profile',   action: () => router.push('/profile') },
@@ -97,8 +95,6 @@ export default function NavBar() {
     const iconColors = [
         'text-amber-400',    // Home
         'text-blue-400',     // Quizzes
-        'text-yellow-400',   // Rankings
-        'text-teal-400',     // Statistics
         'text-purple-400',   // Auto Quiz
         'text-green-400',    // Chess
         'text-pink-400',     // Profile
@@ -108,8 +104,6 @@ export default function NavBar() {
     const navHoverColors = [
         'hover:text-amber-300 hover:bg-amber-500/10',
         'hover:text-blue-300 hover:bg-blue-500/10',
-        'hover:text-yellow-300 hover:bg-yellow-500/10',
-        'hover:text-teal-300 hover:bg-teal-500/10',
         'hover:text-purple-300 hover:bg-purple-500/10',
         'hover:text-green-300 hover:bg-green-500/10',
         'hover:text-pink-300 hover:bg-pink-500/10',
