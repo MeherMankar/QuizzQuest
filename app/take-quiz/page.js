@@ -62,8 +62,8 @@ function TakeQuizContent() {
     return (
       <>
         <NavBar />
-        <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-yellow-500"></div>
+        <div className="min-h-screen bg-gray-950 flex items-center justify-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-amber-500"></div>
         </div>
       </>
     );
@@ -73,10 +73,10 @@ function TakeQuizContent() {
     return (
       <>
         <NavBar />
-        <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center">
+        <div className="min-h-screen bg-gray-950 flex items-center justify-center">
           <div className="text-center">
             <h2 className="text-2xl text-white mb-4">Quiz not found</h2>
-            <button onClick={() => router.push('/quizzes')} className="bg-yellow-500 text-black px-6 py-2 rounded-lg">
+            <button onClick={() => router.push('/quizzes')} className="bg-amber-500 text-black px-6 py-2 rounded-lg font-semibold hover:bg-amber-400">
               Back to Quizzes
             </button>
           </div>
@@ -90,11 +90,17 @@ function TakeQuizContent() {
     return (
       <>
         <NavBar />
-        <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 py-8 px-4">
+        <div className="min-h-screen bg-gray-950 py-8 px-4">
+          {/* Ambient background */}
+          <div className="pointer-events-none fixed inset-0 overflow-hidden -z-10">
+            <div className="absolute top-[-10%] left-[20%] h-[500px] w-[500px] rounded-full bg-amber-600/5 blur-[120px]" />
+            <div className="absolute bottom-[-10%] right-[10%] h-[400px] w-[400px] rounded-full bg-green-600/5 blur-[100px]" />
+          </div>
+
           <div className="max-w-4xl mx-auto">
-            <div className="bg-gray-800/50 backdrop-blur-sm p-8 rounded-xl shadow-lg">
-              <h2 className="text-3xl font-bold text-yellow-500 mb-4 text-center">Quiz Results</h2>
-              <div className={`text-6xl font-bold mb-4 text-center ${percentage >= 80 ? 'text-green-500' : percentage >= 60 ? 'text-yellow-500' : 'text-red-500'}`}>
+            <div className="bg-gray-900/60 backdrop-blur-sm border border-white/5 p-8 rounded-xl shadow-lg">
+              <h2 className="text-3xl font-bold text-amber-400 mb-4 text-center">Quiz Results</h2>
+              <div className={`text-6xl font-bold mb-4 text-center ${percentage >= 80 ? 'text-green-400' : percentage >= 60 ? 'text-amber-400' : 'text-red-400'}`}>
                 {percentage}%
               </div>
               <p className="text-gray-300 text-lg mb-6 text-center">
@@ -102,7 +108,7 @@ function TakeQuizContent() {
               </p>
               <div className="space-y-6 mt-8">
                 {result.details.map((detail, index) => (
-                  <div key={index} className={`p-6 rounded-lg ${detail.correct ? 'bg-green-900/20 border border-green-500/30' : 'bg-red-900/20 border border-red-500/30'}`}>
+                  <div key={index} className={`p-6 rounded-lg border ${detail.correct ? 'bg-green-900/20 border-green-500/30' : 'bg-red-900/20 border-red-500/30'}`}>
                     <h3 className="text-xl font-semibold text-white mb-3">{index + 1}. {detail.question}</h3>
                     <p className="text-sm text-gray-400 mb-2">Your answer: <span className={detail.correct ? 'text-green-400' : 'text-red-400'}>{detail.userAnswer || 'Not answered'}</span></p>
                     <p className="text-sm text-gray-400">Correct answer: <span className="text-green-400">{detail.correctAnswer}</span></p>
@@ -110,7 +116,7 @@ function TakeQuizContent() {
                 ))}
               </div>
               <div className="flex gap-4 mt-8">
-                <button onClick={() => router.push('/quizzes')} className="flex-1 bg-yellow-500 text-black py-3 rounded-lg font-semibold hover:bg-yellow-400">
+                <button onClick={() => router.push('/quizzes')} className="flex-1 bg-amber-500 text-black py-3 rounded-lg font-semibold hover:bg-amber-400">
                   Back to Quizzes
                 </button>
                 <button onClick={() => { setResult(null); setAnswers({}); }} className="flex-1 bg-gray-700 text-white py-3 rounded-lg font-semibold hover:bg-gray-600">
@@ -127,21 +133,27 @@ function TakeQuizContent() {
   return (
     <>
       <NavBar />
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 py-8 px-4">
+      <div className="min-h-screen bg-gray-950 py-8 px-4">
+        {/* Ambient background */}
+        <div className="pointer-events-none fixed inset-0 overflow-hidden -z-10">
+          <div className="absolute top-[-10%] left-[20%] h-[500px] w-[500px] rounded-full bg-amber-600/5 blur-[120px]" />
+          <div className="absolute bottom-[-10%] right-[10%] h-[400px] w-[400px] rounded-full bg-purple-600/5 blur-[100px]" />
+        </div>
+
         <div className="max-w-4xl mx-auto">
-          <h1 className="text-4xl font-bold text-yellow-500 text-center mb-2">{quiz.title}</h1>
+          <h1 className="text-4xl font-bold text-amber-400 text-center mb-2">{quiz.title}</h1>
           <p className="text-gray-400 text-center mb-8">{quiz.questions.length} Questions</p>
           
           <div className="space-y-6">
             {quiz.questions.map((question, index) => (
-              <div key={index} className="bg-gray-800/50 backdrop-blur-sm p-6 rounded-xl shadow-lg">
+              <div key={index} className="bg-gray-900/60 backdrop-blur-sm border border-white/5 p-6 rounded-xl shadow-lg">
                 <h3 className="text-xl font-semibold text-white mb-4">{index + 1}. {question.question}</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {question.ops.map((option, optIndex) => (
                     <button
                       key={optIndex}
                       onClick={() => setAnswers(prev => ({ ...prev, [index]: option }))}
-                      className={`p-4 rounded-lg text-left transition-all ${answers[index] === option ? 'bg-yellow-500/20 border-2 border-yellow-500 text-white' : 'bg-gray-700/50 hover:bg-gray-600/50 text-gray-300'}`}
+                      className={`p-4 rounded-lg text-left transition-all ${answers[index] === option ? 'bg-amber-500/20 border-2 border-amber-500 text-white' : 'bg-gray-800/50 hover:bg-gray-700/50 text-gray-300 border border-white/5'}`}
                     >
                       {option}
                     </button>
@@ -153,7 +165,7 @@ function TakeQuizContent() {
             <button
               onClick={handleSubmit}
               disabled={submitting}
-              className={`w-full py-3 bg-yellow-500 text-black rounded-lg font-semibold transition-all ${submitting ? 'opacity-50 cursor-not-allowed' : 'hover:bg-yellow-400'}`}
+              className={`w-full py-3 bg-amber-500 text-black rounded-lg font-semibold transition-all ${submitting ? 'opacity-50 cursor-not-allowed' : 'hover:bg-amber-400'}`}
             >
               {submitting ? 'Submitting...' : 'Submit Quiz'}
             </button>
@@ -169,8 +181,8 @@ export default function TakeQuizPage() {
     <Suspense fallback={
       <>
         <NavBar />
-        <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-yellow-500"></div>
+        <div className="min-h-screen bg-gray-950 flex items-center justify-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-amber-500"></div>
         </div>
       </>
     }>

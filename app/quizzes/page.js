@@ -26,16 +26,6 @@ const QUICK_ACTIONS = [
 export default function QuizzesPage() {
   const { data: session } = useSession();
   const router = useRouter();
-  const [stats, setStats] = useState(null);
-
-  useEffect(() => {
-    if (session) {
-      fetch('/api/auth/user_stats')
-        .then(r => r.ok ? r.json() : null)
-        .then(data => { if (data) setStats(data.stats); })
-        .catch(() => {});
-    }
-  }, [session]);
 
   return (
     <>
@@ -56,11 +46,6 @@ export default function QuizzesPage() {
               Choose how you<br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-orange-400">want to learn</span>
             </h1>
-            {session && stats && (
-              <p className="mt-3 text-gray-500 text-sm">
-                You've completed <span className="text-amber-400 font-semibold">{stats.totalQuizzes || 0}</span> quizzes · Average score <span className="text-green-400 font-semibold">{stats.averageScore || 0}%</span>
-              </p>
-            )}
           </div>
 
           {/* Quick actions */}
