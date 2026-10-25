@@ -8,7 +8,6 @@ import { signOut, useSession } from 'next-auth/react';
 export default function NavBar() {
     const [isOpen, setIsOpen] = useState(false);
     const [userProfilePic, setUserProfilePic] = useState(null);
-    const [isRoleDropdownOpen, setIsRoleDropdownOpen] = useState(false);
     const [canSwitchRole, setCanSwitchRole] = useState(false);
     const [currentRole, setCurrentRole] = useState('student');
     const [scrolled, setScrolled] = useState(false);
@@ -91,78 +90,46 @@ export default function NavBar() {
         { label: 'About Us',  icon: faInfoCircle,    path: '/aboutus',   action: () => router.push('/aboutus') },
     ];
 
-    // Color map for nav items
-    const iconColors = [
-        'text-amber-400',    // Home
-        'text-blue-400',     // Quizzes
-        'text-purple-400',   // Auto Quiz
-        'text-green-400',    // Chess
-        'text-pink-400',     // Profile
-        'text-orange-400',   // About Us
-    ];
-
-    const navHoverColors = [
-        'hover:text-amber-300 hover:bg-amber-500/10',
-        'hover:text-blue-300 hover:bg-blue-500/10',
-        'hover:text-purple-300 hover:bg-purple-500/10',
-        'hover:text-green-300 hover:bg-green-500/10',
-        'hover:text-pink-300 hover:bg-pink-500/10',
-        'hover:text-orange-300 hover:bg-orange-500/10',
-    ];
-
     return (
         <>
             {/* Header */}
             <header className={`fixed top-0 z-40 w-full transition-all duration-300 ${
                 scrolled
-                  ? 'border-b border-white/8 bg-[#050508]/95 shadow-[0_1px_40px_rgba(0,0,0,0.6)]'
-                  : 'border-b border-white/5 bg-[#050508]/80'
-            }`} style={{backdropFilter:'blur(28px) saturate(200%)'}}>
-                <div className="container mx-auto px-4">
-                    <div className="flex h-16 items-center justify-between">
+                  ? 'border-b border-[#d9d7ce] bg-[#f5f2ea]/95 shadow-[0_4px_18px_rgba(35,48,39,0.06)]'
+                  : 'border-b border-[#dedbd1] bg-[#f5f2ea]/90'
+            }`} style={{backdropFilter:'blur(18px)'}}>
+                <div className="mx-auto max-w-7xl px-5 sm:px-8">
+                    <div className="flex h-[4.25rem] items-center justify-between">
                         {/* Logo */}
                         <button
                             onClick={() => router.push('/')}
-                            className="group flex items-center gap-2"
+                            className="group flex items-center gap-2.5"
                         >
-                            {/* Animated glowing dot */}
-                            <span className="relative flex h-2.5 w-2.5">
-                                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-amber-400 opacity-60" />
-                                <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-amber-500" />
+                            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#294537] font-serif text-lg font-bold text-[#f5f2ea] transition-transform group-hover:-rotate-3">
+                                Q
                             </span>
-                            <span
-                                className="text-xl font-black tracking-tight animate-gradient bg-clip-text text-transparent"
-                                style={{
-                                    backgroundImage: 'linear-gradient(135deg, #fbbf24, #f97316, #fb7185, #a855f7, #fbbf24)',
-                                    backgroundSize: '300% 300%',
-                                    animation: 'gradShift 6s ease infinite',
-                                    WebkitBackgroundClip: 'text',
-                                    WebkitTextFillColor: 'transparent',
-                                }}
-                            >
+                            <span className="text-lg font-semibold tracking-[-0.04em] text-[#24372c]">
                                 QuizzQuest
                             </span>
                         </button>
 
                         {/* Desktop nav */}
-                        <nav className="hidden items-center gap-0.5 md:flex">
-                            {navigationItems.slice(1, -1).map((item, index) => {
+                        <nav aria-label="Main navigation" className="hidden items-center gap-1 md:flex">
+                            {navigationItems.slice(1).map((item, index) => {
                                 const isActive = pathname === item.path;
                                 return (
                                 <button
                                     key={index}
                                     onClick={item.action}
-                                    className={`relative flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200 ${
+                                    aria-current={isActive ? 'page' : undefined}
+                                    className={`relative flex items-center gap-2 rounded-lg px-3 py-2 text-[13px] font-medium transition-colors duration-200 ${
                                         isActive
-                                          ? 'text-white '
-                                          : `text-gray-500 ${navHoverColors[index + 1]}`
+                                          ? 'bg-[#e8ece4] text-[#294537]'
+                                          : 'text-[#69746b] hover:bg-[#ebe9df] hover:text-[#294537]'
                                     }`}
                                 >
-                                    {isActive && (
-                                        <span className="absolute inset-0 rounded-lg bg-white/5 border border-white/10" />
-                                    )}
-                                    <FontAwesomeIcon icon={item.icon} className={`h-3.5 w-3.5 ${iconColors[index + 1]}`} />
-                                    <span className="relative">{item.label}</span>
+                                    <FontAwesomeIcon icon={item.icon} className="h-3.5 w-3.5 opacity-75" />
+                                    <span>{item.label}</span>
                                 </button>
                                 );
                             })}
@@ -173,13 +140,14 @@ export default function NavBar() {
                             {!session ? (
                                 <button
                                     onClick={() => router.push('/auth/login')}
-                                    className="hidden rounded-full border border-amber-500/30 bg-amber-500/10 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.2em] text-amber-300 transition-all hover:border-amber-400/50 hover:bg-amber-500/20 sm:inline-flex"
+                                    className="hidden rounded-lg bg-[#294537] px-4 py-2 text-xs font-semibold text-white transition-colors hover:bg-[#1e382a] sm:inline-flex"
                                 >
                                     Sign in
                                 </button>
                             ) : (
-                                <div className="hidden items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-2 py-1 sm:flex">
-                                    <span className="rounded-full bg-emerald-500/15 px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.18em] text-emerald-300">
+                                <div className="hidden items-center gap-2 rounded-full border border-[#d9d7ce] bg-[#fbfaf6] px-2.5 py-1.5 sm:flex">
+                                    <span className="h-1.5 w-1.5 rounded-full bg-[#67836a]" />
+                                    <span className="text-[10px] font-semibold uppercase tracking-[0.12em] text-[#526b56]">
                                         {currentRole || 'student'}
                                     </span>
                                 </div>
@@ -187,20 +155,22 @@ export default function NavBar() {
 
                             <button
                                 onClick={() => ToggleMenu()}
-                                className="flex items-center gap-2 rounded-xl p-1.5 transition-all hover:bg-white/5"
+                                aria-label={isOpen ? 'Close menu' : 'Open menu'}
+                                aria-expanded={isOpen}
+                                className="flex items-center gap-2 rounded-lg p-1.5 text-[#526157] transition-colors hover:bg-[#e9e6dc] hover:text-[#294537]"
                             >
                                 {userProfilePic ? (
                                     <div className="relative">
                                         <img
                                             src={userProfilePic}
-                                            alt="profile"
-                                            className="h-8 w-8 rounded-full ring-2 ring-amber-500 shadow-[0_0_12px_rgba(245,158,11,0.5)]"
+                                            alt="Profile"
+                                            className="h-8 w-8 rounded-full ring-2 ring-[#d0d8cc]"
                                         />
-                                        <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-green-500 ring-2 ring-[#050508]" />
+                                        <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-[#66846a] ring-2 ring-[#f5f2ea]" />
                                     </div>
                                 ) : null}
-                                <div className={`flex h-7 w-7 items-center justify-center rounded-md transition-all ${
-                                    isOpen ? 'bg-amber-500/20 text-amber-400 shadow-[0_0_10px_rgba(245,158,11,0.3)]' : 'text-gray-400 hover:text-gray-200'
+                                <div className={`flex h-8 w-8 items-center justify-center rounded-lg transition-colors ${
+                                    isOpen ? 'bg-[#e8ece4] text-[#294537]' : ''
                                 }`}>
                                     <FontAwesomeIcon icon={isOpen ? faTimes : faBars} className="h-4 w-4" />
                                 </div>
@@ -213,35 +183,25 @@ export default function NavBar() {
             {/* Backdrop */}
             {isOpen && (
                 <div
-                    className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm"
+                    className="fixed inset-0 z-40 bg-[#20352b]/25 backdrop-blur-[2px]"
                     onClick={() => setIsOpen(false)}
                 />
             )}
 
             {/* Side Drawer */}
-            <div className={`fixed right-0 top-0 z-50 h-full w-72 shadow-2xl transition-all duration-300 ease-in-out overflow-hidden ${
+            <div className={`fixed right-0 top-0 z-50 h-full w-80 max-w-[88vw] overflow-hidden border-l border-[#dedbd1] bg-[#f8f6ef] shadow-[-16px_0_50px_rgba(35,48,39,0.12)] transition-transform duration-300 ease-in-out ${
                 isOpen ? 'translate-x-0' : 'translate-x-full'
-            }`} style={{
-                background: 'linear-gradient(160deg, #0d0d14 0%, #08080f 100%)',
-                borderLeft: '1px solid rgba(255,255,255,0.07)',
-            }}>
-                {/* Ambient orb inside drawer */}
-                <div className="absolute top-0 right-0 h-48 w-48 rounded-full opacity-30 pointer-events-none"
-                    style={{background:'radial-gradient(circle, rgba(245,158,11,0.2), transparent 70%)', filter:'blur(40px)'}} />
+            }`} aria-hidden={!isOpen}>
 
                 {/* Drawer header */}
-                <div className="flex items-center justify-between px-5 py-4"
-                    style={{borderBottom:'1px solid rgba(255,255,255,0.06)'}}>
-                    <span className="text-base font-black tracking-tight"
-                        style={{
-                            backgroundImage:'linear-gradient(135deg,#fbbf24,#f97316,#fb7185)',
-                            WebkitBackgroundClip:'text', backgroundClip:'text', WebkitTextFillColor:'transparent'
-                        }}>
+                <div className="flex items-center justify-between border-b border-[#e2dfd5] px-5 py-4">
+                    <span className="text-base font-semibold tracking-tight text-[#294537]">
                         QuizzQuest
                     </span>
                     <button
                         onClick={() => setIsOpen(false)}
-                        className="flex h-8 w-8 items-center justify-center rounded-lg text-gray-500 transition-all hover:bg-white/8 hover:text-gray-200 hover:scale-110"
+                        aria-label="Close menu"
+                        className="flex h-8 w-8 items-center justify-center rounded-lg text-[#69746b] transition-colors hover:bg-[#ebe9df] hover:text-[#294537]"
                     >
                         <FontAwesomeIcon icon={faTimes} className="h-4 w-4" />
                     </button>
@@ -249,56 +209,55 @@ export default function NavBar() {
 
                 {/* User info */}
                 {userProfilePic && (
-                    <div className="flex items-center gap-3 px-5 py-3.5" style={{borderBottom:'1px solid rgba(255,255,255,0.05)'}}>
+                    <div className="flex items-center gap-3 border-b border-[#e2dfd5] px-5 py-4">
                         <div className="relative">
                             <img src={userProfilePic} alt="profile"
-                                className="h-10 w-10 rounded-full"
-                                style={{boxShadow:'0 0 0 2px rgba(245,158,11,0.5), 0 0 16px rgba(245,158,11,0.25)'}}
+                                className="h-10 w-10 rounded-full ring-2 ring-[#d0d8cc]"
                             />
-                            <span className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full bg-green-500 ring-2 ring-[#0d0d14]" />
+                            <span className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full bg-[#66846a] ring-2 ring-[#f8f6ef]" />
                         </div>
                         <div className="min-w-0">
-                            <p className="truncate text-sm font-semibold text-gray-100">{session?.user?.name || 'User'}</p>
-                            <p className="truncate text-xs text-gray-600">{session?.user?.email || ''}</p>
+                            <p className="truncate text-sm font-semibold text-[#2c4034]">{session?.user?.name || 'User'}</p>
+                            <p className="truncate text-xs text-[#7c8279]">{session?.user?.email || ''}</p>
                         </div>
                     </div>
                 )}
 
                 {/* Nav items */}
-                <div className="flex flex-col gap-0.5 p-3 mt-2">
-                    {navigationItems.map((item, index) => {
+                <nav aria-label="Mobile navigation" className="mt-2 flex flex-col gap-1 p-3">
+                    {navigationItems.map((item) => {
                         const isActive = pathname === item.path;
                         return (
                         <button
-                            key={index}
+                            key={item.path}
                             onClick={() => { item.action(); setIsOpen(false); }}
-                            className={`group flex w-full items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-medium transition-all duration-150 ${
+                            aria-current={isActive ? 'page' : undefined}
+                            className={`group flex w-full items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium transition-colors duration-150 ${
                                 isActive
-                                  ? 'text-white bg-white/6'
-                                  : `text-gray-400 ${navHoverColors[index]}`
+                                  ? 'bg-[#e8ece4] text-[#294537]'
+                                  : 'text-[#68736a] hover:bg-[#eeece3] hover:text-[#294537]'
                             }`}
                         >
-                            <span className={`flex h-7 w-7 items-center justify-center rounded-lg transition-all ${
-                                isActive ? `${iconColors[index]} bg-white/8` : `bg-[#111118] ${iconColors[index]}`
-                            }`}
-                                style={isActive ? {boxShadow:`0 0 12px currentColor`} : {}}>
+                            <span className={`flex h-8 w-8 items-center justify-center rounded-lg ${
+                                isActive ? 'bg-white text-[#496c55]' : 'bg-[#eeece3] text-[#758176]'
+                            }`}>
                                 <FontAwesomeIcon icon={item.icon} className="h-3.5 w-3.5" />
                             </span>
                             {item.label}
-                            {isActive && <span className="ml-auto h-1.5 w-1.5 rounded-full bg-amber-500" />}
+                            {isActive && <span className="ml-auto h-1.5 w-1.5 rounded-full bg-[#bf6544]" />}
                         </button>
                         );
                     })}
-                </div>
+                </nav>
 
                 {/* Footer actions */}
-                <div className="absolute bottom-0 left-0 right-0 p-3 space-y-1" style={{borderTop:'1px solid rgba(255,255,255,0.05)'}}>
+                <div className="absolute bottom-0 left-0 right-0 space-y-1 border-t border-[#e2dfd5] bg-[#f8f6ef] p-3">
                     {canSwitchRole && (
                         <button
                             onClick={() => { handleRoleSwitch(currentRole === 'teacher' ? 'student' : 'teacher'); }}
-                            className="flex w-full items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-medium text-purple-400 transition-all hover:bg-purple-500/10 hover:text-purple-300"
+                            className="flex w-full items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium text-[#526b56] transition-colors hover:bg-[#e8ece4]"
                         >
-                            <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-purple-500/10 shadow-[0_0_8px_rgba(168,85,247,0.3)]">
+                            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#e8ece4]">
                                 <FontAwesomeIcon icon={faUser} className="h-3.5 w-3.5" />
                             </span>
                             Switch to {currentRole === 'teacher' ? 'Student' : 'Teacher'}
@@ -306,14 +265,9 @@ export default function NavBar() {
                     )}
                     <button
                         onClick={() => signOut()}
-                        className="flex w-full items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-medium transition-all"
-                        style={{
-                            background:'linear-gradient(135deg,rgba(239,68,68,0.08),rgba(220,38,38,0.04))',
-                            color:'rgba(252,165,165,1)',
-                            border:'1px solid rgba(239,68,68,0.15)'
-                        }}
+                    className="flex w-full items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium text-[#9a5344] transition-colors hover:bg-[#f5e9e3]"
                     >
-                        <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-red-500/10">
+                    <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#f5e9e3]">
                             <FontAwesomeIcon icon={faSignOutAlt} className="h-3.5 w-3.5" />
                         </span>
                         Sign Out
