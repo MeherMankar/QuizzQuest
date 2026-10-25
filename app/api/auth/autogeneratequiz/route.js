@@ -1,311 +1,153 @@
 import { NextResponse } from 'next/server';
-import clientPromise from '../../../../lib/mongodb';
 import { validateQuizTopic, validateNumberOfQuestions, sanitizeInput } from '../../../../lib/validation';
+
+const GEMINI_MODELS = ['gemini-3.6-flash', 'gemini-3.5-flash'];
 
 export async function POST(req) {
     try {
-        const { topic, numberOfQuestions, aiProvider = 'gemini' } = await req.json();
-        
-        // Input validation
-        if (!validateQuizTopic(topic)) {
-            return NextResponse.json({ error: "Topic must be between 2-100 characters" }, { status: 400 });
-        }
-        
-        if (!validateNumberOfQuestions(numberOfQuestions)) {
-            return NextResponse.json({ error: "Number of questions must be between 1-20" }, { status: 400 });
-        }
-        
-        const sanitizedTopic = sanitizeInput(topic);
-
-        // Generate a prompt for AI
-        const prompt = `Create ${numberOfQuestions} multiple choice questions about ${sanitizedTopic}. Each question should have 4 options. Format as JSON array: [{"question": "text", "options": ["a", "b", "c", "d"], "answer": 0}]`;
-
-        let generatedQuestions;
-        let lastError;
-
-        // Try different AI providers with fallback
+        let requestBody;
         try {
-            if (aiProvider === 'openai') {
-                generatedQuestions = await generateWithOpenAI(prompt);
-            } else if (aiProvider === 'huggingface') {
-                generatedQuestions = await generateWithHuggingFace(prompt);
-            } else if (aiProvider === 'openrouter') {
-                generatedQuestions = await generateWithOpenRouter(prompt);
-            } else if (aiProvider === 'routeway') {
-                generatedQuestions = await generateWithRouteway(prompt);
-            } else {
-                generatedQuestions = await generateWithGemini(prompt);
-            }
-        } catch (error) {
-            lastError = error;
-            console.log(`Primary AI provider (${aiProvider}) failed, trying fallback...`);
-            
-            // Fallback to Gemini if primary fails
-            try {
-                generatedQuestions = await generateWithGemini(prompt);
-            } catch (fallbackError) {
-                console.log('Fallback also failed, trying OpenRouter...');
-                try {
-                    generatedQuestions = await generateWithOpenRouter(prompt);
-                } catch (finalError) {
-                    throw new Error(`All AI providers failed. Last error: ${finalError.message}`);
-                }
-            }
+            requestBody = await req.json();
+        } catch {
+            return NextResponse.json({ error: 'Request body must be valid JSON.' }, { status: 400 });
         }
 
-        // Format questions for database
-        const formattedQuestions = generatedQuestions.map(q => ({
-            question: q.question,
-            ops: q.options,
-            answer: q.options[q.answer],
-            answerIndex: typeof q.answer === 'number' ? q.answer : q.options.indexOf(q.answer)
-        }));
-
-        // Save to database
-        const client = await clientPromise;
-        if (client) {
-            const db = client.db('QuizApp_users');
-            await db.collection('questions').insertMany(formattedQuestions);
+        if (!requestBody || typeof requestBody !== 'object' || Array.isArray(requestBody)) {
+            return NextResponse.json({ error: 'Request body must be a JSON object.' }, { status: 400 });
         }
 
-        return NextResponse.json({ 
-            success: true, 
-            questions: formattedQuestions 
-        });
+        const { topic, numberOfQuestions = 5 } = requestBody;
+        const questionCount = Number(numberOfQuestions);
+
+        if (!validateQuizTopic(topic)) {
+            return NextResponse.json({ error: 'Topic must be between 2 and 100 characters.' }, { status: 400 });
+        }
+
+        if (!validateNumberOfQuestions(questionCount) || !Number.isInteger(questionCount)) {
+            return NextResponse.json({ error: 'Number of questions must be between 1 and 20.' }, { status: 400 });
+        }
+
+        const apiKey = process.env.GEMINI_API_KEY;
+        if (!apiKey || apiKey.startsWith('your_') || apiKey.startsWith('local-')) {
+            return NextResponse.json(
+                { error: 'AI quiz generation is not configured. Add a valid GEMINI_API_KEY to .env.local.' },
+                { status: 503 }
+            );
+        }
+
+        const safeTopic = sanitizeInput(topic);
+        const questions = await generateQuiz(safeTopic, questionCount, apiKey);
+
+        return NextResponse.json({ success: true, questions });
     } catch (error) {
         console.error('Auto-generate quiz error:', error);
-        return NextResponse.json({ error: "Failed to generate quiz" }, { status: 500 });
+        const message = error instanceof Error ? error.message : 'An unexpected error occurred.';
+        return NextResponse.json({ error: `Could not generate the quiz. ${message}` }, { status: 502 });
     }
 }
 
-async function generateWithHuggingFace(prompt) {
-    const response = await fetch('https://api-inference.huggingface.co/models/microsoft/DialoGPT-medium', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${process.env.HUGGINGFACE_API_KEY}`
-        },
-        body: JSON.stringify({
-            inputs: prompt,
-            parameters: {
-                max_new_tokens: 1000,
-                temperature: 0.7,
-                return_full_text: false
-            }
-        })
-    });
+async function generateQuiz(topic, numberOfQuestions, apiKey) {
+    const prompt = [
+        `Write exactly ${numberOfQuestions} useful multiple-choice questions about: ${topic}.`,
+        'Return only a JSON array. Each item must have this shape:',
+        '{"question":"...","options":["...","...","...","..."],"answer":0}',
+        'The answer must be the zero-based index of the one correct option. Keep distractors plausible.',
+    ].join('\n');
+    const failures = [];
 
-    const data = await response.json();
-    
-    if (data.error) {
-        throw new Error(`HuggingFace API Error: ${data.error}`);
-    }
-    
-    if (!data[0] || !data[0].generated_text) {
-        throw new Error(`Invalid HuggingFace API response`);
-    }
-    
-    const content = data[0].generated_text;
-    const cleanContent = content.replace(/```json\n?|```\n?/g, '').trim();
-    return parseAIResponse(cleanContent);
-}
+    for (const model of GEMINI_MODELS) {
+        let response;
+        let data;
 
-async function generateWithOpenAI(prompt) {
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`
-        },
-        body: JSON.stringify({
-            model: "gpt-3.5-turbo",
-            messages: [{ role: "user", content: prompt }],
-            max_tokens: 1000,
-            temperature: 0.7
-        })
-    });
-
-    const data = await response.json();
-    
-    if (data.error) {
-        throw new Error(`OpenAI API Error: ${data.error.message}`);
-    }
-    
-    if (!data.choices || !data.choices[0] || !data.choices[0].message) {
-        throw new Error(`Invalid OpenAI API response`);
-    }
-    
-    const content = data.choices[0].message.content;
-    const cleanContent = content.replace(/```json\n?|```\n?/g, '').trim();
-    return parseAIResponse(cleanContent);
-}
-
-async function generateWithOpenRouter(prompt) {
-    // Try multiple model endpoints in case some are not available on the user's OpenRouter account
-    const candidateModels = [
-        'mistralai/mistral-7b-instruct:free',
-        'meta-llama/llama-3-8b-instruct:free',
-        'mistralai/mistral-7b-instruct',
-        'meta-llama/llama-3-8b-instruct'
-    ];
-
-    let lastErr;
-    for (const model of candidateModels) {
         try {
-            const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${process.env.OPENROUTER_API_KEY}`
-                },
-                body: JSON.stringify({
-                    model,
-                    messages: [{ role: 'user', content: prompt }],
-                    max_tokens: 1000,
-                    temperature: 0.7
-                })
-            });
-
-            const data = await response.json();
-
-            if (data.error) {
-                // If OpenRouter reports no endpoints for this model, try the next candidate
-                const msg = data.error.message || JSON.stringify(data.error);
-                if (/no endpoints found/i.test(msg) || /No endpoints found/i.test(msg)) {
-                    lastErr = new Error(`OpenRouter endpoint not available for model ${model}: ${msg}`);
-                    console.warn(lastErr.message);
-                    continue;
+            response = await fetch(
+                `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(apiKey)}`,
+                {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: prompt }] }],
+                        generationConfig: {
+                            responseMimeType: 'application/json',
+                            temperature: 0.7,
+                        },
+                    }),
                 }
-                throw new Error(`OpenRouter API Error: ${msg}`);
-            }
-
-            if (!data.choices || !data.choices[0] || !data.choices[0].message) {
-                throw new Error(`Invalid OpenRouter API response for model ${model}`);
-            }
-
-            const content = data.choices[0].message.content;
-            const cleanContent = content.replace(/```json\n?|```\n?/g, '').trim();
-            console.log(`OpenRouter succeeded with model ${model}`);
-            return parseAIResponse(cleanContent);
-        } catch (err) {
-            // Keep the last error and try the next model
-            lastErr = err;
-            console.warn(`OpenRouter attempt failed for model ${model}: ${err.message}`);
+            );
+            data = await response.json();
+        } catch (error) {
+            failures.push(`${model}: ${error instanceof Error ? error.message : 'network request failed'}`);
             continue;
         }
+
+        if (!response.ok || data.error) {
+            const reason = data.error?.message || `HTTP ${response.status}`;
+            failures.push(`${model}: ${reason}`);
+            if ([400, 401, 403].includes(response.status)) break;
+            continue;
+        }
+
+        const content = data.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (typeof content !== 'string' || !content.trim()) {
+            failures.push(`${model}: the model returned no quiz content`);
+            continue;
+        }
+
+        try {
+            return formatQuestions(parseAIResponse(content), numberOfQuestions);
+        } catch (error) {
+            failures.push(`${model}: ${error instanceof Error ? error.message : 'invalid quiz response'}`);
+        }
     }
 
-    // If we exhausted models, throw the last error
-    throw new Error(lastErr ? lastErr.message : 'OpenRouter: no models tried');
+    throw new Error(failures.join(' | ') || 'No Gemini models are available.');
 }
 
-async function generateWithRouteway(prompt) {
-    const response = await fetch('https://api.routeway.ai/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${process.env.ROUTEWAY_API_KEY}`
-        },
-        body: JSON.stringify({
-            model: "gpt-3.5-turbo",
-            messages: [{ role: "user", content: prompt }],
-            max_tokens: 1000,
-            temperature: 0.7
-        })
+function formatQuestions(payload, expectedCount) {
+    if (!Array.isArray(payload) || payload.length !== expectedCount) {
+        throw new Error(`Expected ${expectedCount} questions, but received ${Array.isArray(payload) ? payload.length : 'an invalid response'}.`);
+    }
+
+    return payload.map((item, index) => {
+        if (!item || typeof item.question !== 'string' || !item.question.trim()) {
+            throw new Error(`Question ${index + 1} is missing its prompt.`);
+        }
+
+        if (!Array.isArray(item.options) || item.options.length !== 4 || item.options.some(option => typeof option !== 'string' || !option.trim())) {
+            throw new Error(`Question ${index + 1} must have four non-empty answer options.`);
+        }
+
+        const answerIndex = typeof item.answer === 'number'
+            ? item.answer
+            : item.options.indexOf(item.answer);
+
+        if (!Number.isInteger(answerIndex) || answerIndex < 0 || answerIndex >= item.options.length) {
+            throw new Error(`Question ${index + 1} has an invalid correct answer.`);
+        }
+
+        return {
+            question: item.question.trim(),
+            ops: item.options.map(option => option.trim()),
+            answer: item.options[answerIndex].trim(),
+            answerIndex,
+        };
     });
-
-    const data = await response.json();
-    
-    if (data.error) {
-        throw new Error(`Routeway API Error: ${data.error.message}`);
-    }
-    
-    if (!data.choices || !data.choices[0] || !data.choices[0].message) {
-        throw new Error(`Invalid Routeway API response structure: ${JSON.stringify(data)}`);
-    }
-    
-    const content = data.choices[0].message.content;
-    const cleanContent = content.replace(/```json\n?|```\n?/g, '').trim();
-    return parseAIResponse(cleanContent);
 }
 
-async function generateWithGemini(prompt) {
-    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            contents: [{
-                parts: [{ text: prompt }]
-            }]
-        })
-    });
-
-    const data = await response.json();
-    
-    if (data.error) {
-        throw new Error(`Gemini API Error: ${data.error.message}`);
-    }
-    
-    if (!data.candidates || !data.candidates[0] || !data.candidates[0].content || !data.candidates[0].content.parts || !data.candidates[0].content.parts[0]) {
-        throw new Error(`Invalid Gemini API response structure`);
-    }
-    
-    const content = data.candidates[0].content.parts[0].text;
-    const cleanContent = content.replace(/```json\n?|```\n?/g, '').trim();
-    return parseAIResponse(cleanContent);
-}
-
-/**
- * Try several strategies to extract JSON from AI model responses.
- * - First try direct JSON.parse
- * - Then try to extract the first JSON array/object substring
- * - If still failing, throw with a helpful message including a short preview
- */
 function parseAIResponse(content) {
-    // Quick attempt
+    const cleaned = content
+        .trim()
+        .replace(/^```(?:json)?\s*/i, '')
+        .replace(/\s*```$/, '');
+
     try {
-        return JSON.parse(content);
-    } catch (e) {
-        // try to find a JSON object or array inside the content
-        const m = content.match(/(\[.*\]|\{.*\})/s);
-        if (m && m[0]) {
-            try {
-                return JSON.parse(m[0]);
-            } catch (e2) {
-                // fallthrough to error below
-            }
+        return JSON.parse(cleaned);
+    } catch {
+        const start = cleaned.indexOf('[');
+        const end = cleaned.lastIndexOf(']');
+        if (start !== -1 && end > start) {
+            return JSON.parse(cleaned.slice(start, end + 1));
         }
-
-        // Try extracting between first [ and last ] (common when an array is returned with leading text)
-        const firstBracket = content.indexOf('[');
-        const lastBracket = content.lastIndexOf(']');
-        if (firstBracket !== -1 && lastBracket !== -1 && lastBracket > firstBracket) {
-            const sub = content.slice(firstBracket, lastBracket + 1);
-            try {
-                return JSON.parse(sub);
-            } catch (e3) {
-                // continue
-            }
-        }
-
-        // Try extracting between first { and last }
-        const firstBrace = content.indexOf('{');
-        const lastBrace = content.lastIndexOf('}');
-        if (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {
-            const sub = content.slice(firstBrace, lastBrace + 1);
-            try {
-                return JSON.parse(sub);
-            } catch (e4) {
-                // continue
-            }
-        }
-
-        // If nothing worked, throw with a short preview to help debugging (not the full content)
-        const preview = content.length > 400 ? content.slice(0, 400) + '...' : content;
-        throw new Error(`Failed to parse AI response as JSON. Preview: ${preview}`);
+        throw new Error('The model returned invalid JSON.');
     }
 }
-
-

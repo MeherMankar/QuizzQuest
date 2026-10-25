@@ -1,4 +1,5 @@
 "use client";
+
 import NavBar from "./NavBar";
 import "../global.css";
 import { useRouter } from 'next/navigation';
@@ -6,46 +7,77 @@ import { signIn, useSession } from "next-auth/react";
 import { useState, useEffect } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 
-const TICKER_ITEMS = [
-  'AI-Powered Quizzes', 'Chess Arena',
-  'Teacher Dashboard', 'Auto Quiz', 'Progress Tracking',
+const FEATURES = [
+  {
+    number: '01',
+    title: 'Build a quick quiz',
+    body: 'Pick a topic and get a short round of multiple-choice practice.',
+    link: 'Make an AI quiz',
+    path: '/autoquiz',
+  },
+  {
+    number: '02',
+    title: 'Browse the library',
+    body: 'Find questions already prepared for your next study session.',
+    link: 'Explore quizzes',
+    path: '/quizzes',
+  },
+  {
+    number: '03',
+    title: 'Take a different kind of break',
+    body: 'Play a game of chess when it is time to step away from the notes.',
+    link: 'Open chess',
+    path: '/chess',
+  },
 ];
 
-function Ticker() {
+function SampleQuestion() {
   return (
-    <div className="relative overflow-hidden border-y border-white/5 bg-gray-950/80 py-2.5 my-10">
-      <div className="flex animate-marquee gap-8 whitespace-nowrap">
-        {[...TICKER_ITEMS, ...TICKER_ITEMS].map((item, i) => (
-          <span key={i} className="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-gray-600">
-            <span className="h-1 w-1 rounded-full bg-amber-500/60" />
-            {item}
-          </span>
+    <div className="relative mx-auto w-full max-w-md rotate-[1deg] rounded-2xl border border-[#d7d1c5] bg-white p-5 shadow-[0_24px_70px_rgba(39,48,41,0.14)] sm:p-7">
+      <div className="mb-8 flex items-center justify-between border-b border-[#e9e5dc] pb-4">
+        <div>
+          <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#7d8179]">A sample question</p>
+          <p className="mt-1 text-sm font-semibold text-[#263b32]">Quick practice</p>
+        </div>
+        <span className="rounded-full bg-[#f5eee5] px-3 py-1.5 text-xs font-medium text-[#a24e32]">01 / 05</span>
+      </div>
+
+      <h2 className="mb-5 text-xl font-semibold leading-snug tracking-tight text-[#1d3027] sm:text-2xl">
+        Which part of a plant cell stores most of its water?
+      </h2>
+
+      <div className="space-y-2.5">
+        {[
+          { letter: 'A', label: 'The nucleus', active: false },
+          { letter: 'B', label: 'The central vacuole', active: true },
+          { letter: 'C', label: 'The cell wall', active: false },
+        ].map((option) => (
+          <div
+            key={option.letter}
+            className={`flex items-center gap-3 rounded-xl border px-3.5 py-3 text-sm ${
+              option.active
+                ? 'border-[#49715d] bg-[#edf3ed] font-medium text-[#254431]'
+                : 'border-[#e9e5dc] bg-[#fcfbf8] text-[#667069]'
+            }`}
+          >
+            <span className={`flex h-6 w-6 items-center justify-center rounded-md text-[11px] font-semibold ${
+              option.active ? 'bg-[#49715d] text-white' : 'bg-[#f0eee8] text-[#737971]'
+            }`}>
+              {option.letter}
+            </span>
+            {option.label}
+            {option.active && <span className="ml-auto text-xs" aria-hidden="true">✓</span>}
+          </div>
         ))}
+      </div>
+
+      <div className="mt-6 flex items-center justify-between text-xs text-[#8a8e85]">
+        <span>One question at a time</span>
+        <span className="font-medium text-[#49715d]">Keep going →</span>
       </div>
     </div>
   );
 }
-
-const FEATURES = [
-  {
-    icon: '🤖',
-    title: 'AI Quiz Generator',
-    body: 'Type any topic and our AI builds a full quiz in seconds. Great for last-minute revision.',
-    accent: 'border-l-purple-500',
-  },
-  {
-    icon: '♟️',
-    title: 'Chess Arena',
-    body: 'Take a break with chess puzzles and games built right into the platform.',
-    accent: 'border-l-green-500',
-  },
-  {
-    icon: '👩‍🏫',
-    title: 'Teacher Tools',
-    body: 'Create question banks, assign quizzes, and track student performance.',
-    accent: 'border-l-teal-500',
-  },
-];
 
 export default function LandingPage() {
   const { data: session } = useSession();
@@ -55,230 +87,210 @@ export default function LandingPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (session) {
-      const profilePic = session.user?.image;
-      const userName = session.user?.name;
-      if (profilePic) localStorage.setItem("userProfilePic", profilePic);
-      if (userName) localStorage.setItem("userName", userName);
-
-      fetch('/api/auth/user_roles', { method: 'GET' })
-        .then(r => r.json())
-        .then(async data => {
-          if (data.role === null) {
-            await fetch('/api/auth/user_roles', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ role: 'student' }),
-            });
-            setRole('student');
-          } else {
-            setRole(data.role);
-          }
-        })
-        .catch(() => setRole('student'))
-        .finally(() => setLoading(false));
-    } else {
+    if (!session) {
       setLoading(false);
       setRole(null);
       localStorage.removeItem("userProfilePic");
       localStorage.removeItem("userName");
+      return;
     }
+
+    const profilePic = session.user?.image;
+    const userName = session.user?.name;
+    if (profilePic) localStorage.setItem("userProfilePic", profilePic);
+    if (userName) localStorage.setItem("userName", userName);
+
+    fetch('/api/auth/user_roles')
+      .then(response => {
+        if (!response.ok) throw new Error('Unable to load account role.');
+        return response.json();
+      })
+      .then(async data => {
+        if (data.role === null) {
+          const response = await fetch('/api/auth/user_roles', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ role: 'student' }),
+          });
+          if (!response.ok) throw new Error('Unable to set account role.');
+          setRole('student');
+        } else {
+          setRole(data.role);
+        }
+      })
+      .catch(error => {
+        console.error('Error loading account role:', error);
+        setRole(session.user?.role || null);
+      })
+      .finally(() => setLoading(false));
   }, [session]);
 
+  const goToQuizzes = () => router.push('/quizzes');
+  const goToAutoQuiz = () => router.push('/autoquiz');
+
   return (
-    <div className="min-h-screen bg-gray-950 text-white">
+    <div className="min-h-screen bg-[#f5f2ea] text-[#1e3028]">
       <NavBar />
 
-      {/* Ambient background */}
-      <div className="pointer-events-none fixed inset-0 overflow-hidden -z-10">
-        <div className="absolute top-[-20%] left-[30%] h-[600px] w-[600px] rounded-full bg-amber-600/[0.04] blur-[140px]" />
-        <div className="absolute bottom-[-10%] right-[20%] h-[500px] w-[500px] rounded-full bg-purple-600/[0.04] blur-[120px]" />
-      </div>
+      <main className="mx-auto max-w-6xl px-5 pb-20 pt-12 sm:px-8 sm:pt-16">
+        <section className="grid items-center gap-12 pb-16 md:grid-cols-[1.05fr_0.95fr] md:gap-8 md:pb-24">
+          <div className="max-w-xl">
+            <p className="mb-6 flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.2em] text-[#69776c]">
+              <span className="h-px w-8 bg-[#bf6544]" />
+              QuizzQuest · Practice with purpose
+            </p>
 
-      <main className="max-w-5xl mx-auto px-4 pt-10 pb-20">
+            <h1 className="font-serif text-5xl font-medium leading-[1.03] tracking-[-0.045em] text-[#20352b] sm:text-6xl lg:text-7xl">
+              Make your next
+              <br />
+              study session
+              <br />
+              <span className="italic text-[#b95c3b]">count.</span>
+            </h1>
 
-        {/* Hero — editorial */}
-        <div className="mb-6 max-w-3xl">
-          <h1 className="text-5xl sm:text-6xl md:text-7xl font-black leading-[1.05] tracking-tight animate-slide-up">
-            Stop reading.<br />
-            <span
-              className="inline-block"
-              style={{
-                backgroundImage: 'linear-gradient(135deg, #fbbf24 0%, #f97316 35%, #fb7185 65%, #a855f7 100%)',
-                backgroundSize: '200% 200%',
-                animation: 'gradShift 4s ease infinite',
-                WebkitBackgroundClip: 'text',
-                backgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                textShadow: 'none',
-                filter: 'drop-shadow(0 0 30px rgba(245,158,11,0.3))',
-              }}
-            >
-              Start&nbsp;playing.
-            </span>
-          </h1>
-        </div>
+            <p className="mt-6 max-w-md text-base leading-7 text-[#657068] sm:text-lg">
+              Turn what you are learning into a few good questions. Practice, see what you know, and keep moving.
+            </p>
 
-        <p className="text-gray-500 max-w-xl text-lg leading-relaxed mb-10 animate-slide-up delay-200">
-          QuizzQuest turns your syllabus into quizzes and challenges —
-          so you actually <span className="text-gray-300 font-medium">remember</span> what you study.
-        </p>
-
-        {/* CTA */}
-        <div className="flex flex-wrap items-center gap-4 mb-4">
-          {loading ? (
-            <div className="flex items-center gap-2 text-gray-600 text-sm">
-              <div className="h-3 w-3 animate-spin rounded-full border-2 border-gray-700 border-t-amber-400" />
-              Loading...
-            </div>
-          ) : !session ? (
-            <>
-              <button
-                onClick={() => signIn()}
-                className="rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 px-7 py-3.5 font-bold text-gray-950 shadow-lg shadow-amber-500/20 transition-all hover:scale-105 hover:shadow-amber-500/40 text-sm"
-              >
-                Get started free →
-              </button>
-              <button
-                onClick={() => router.push('/autoquiz')}
-                className="rounded-xl border border-white/10 px-7 py-3.5 font-medium text-gray-400 text-sm transition-all hover:border-white/20 hover:text-white"
-              >
-                Try AI quiz — no login
-              </button>
-            </>
-          ) : (
-            <>
-              {role === 'student' && (
+            <div className="mt-8 flex flex-wrap gap-3">
+              {loading ? (
+                <span className="text-sm text-[#748078]">Checking your account…</span>
+              ) : !session ? (
                 <>
                   <button
-                    onClick={() => router.push('/quizzes')}
-                    className="rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 px-7 py-3.5 font-bold text-gray-950 shadow-lg shadow-amber-500/20 transition-all hover:scale-105 text-sm"
+                    onClick={() => signIn()}
+                    className="rounded-lg bg-[#294537] px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#1e382a]"
                   >
-                    📚 Browse quizzes →
+                    Sign in to QuizzQuest
                   </button>
                   <button
-                    onClick={() => router.push('/autoquiz')}
-                    className="rounded-xl border border-white/10 px-7 py-3.5 font-medium text-gray-400 text-sm transition-all hover:border-white/20 hover:text-white"
+                    onClick={goToAutoQuiz}
+                    className="rounded-lg border border-[#c9c8bc] px-5 py-3 text-sm font-semibold text-[#30483a] transition-colors hover:border-[#718575] hover:bg-white/60"
                   >
-                    Try AI quiz
+                    Try a quick quiz
                   </button>
                 </>
-              )}
-              {role === 'teacher' && (
+              ) : role === 'teacher' ? (
                 <>
                   <button
                     onClick={() => router.push('/teacher/questions')}
-                    className="rounded-xl bg-gradient-to-r from-green-500 to-emerald-500 px-7 py-3.5 font-bold text-white shadow-lg shadow-green-500/20 transition-all hover:scale-105 text-sm"
+                    className="rounded-lg bg-[#294537] px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#1e382a]"
                   >
-                    ✨ Create questions →
+                    Open teacher tools
                   </button>
                   <button
-                    onClick={() => router.push('/viewquestions')}
-                    className="rounded-xl border border-white/10 px-7 py-3.5 font-medium text-gray-400 text-sm transition-all hover:border-white/20 hover:text-white"
+                    onClick={goToQuizzes}
+                    className="rounded-lg border border-[#c9c8bc] px-5 py-3 text-sm font-semibold text-[#30483a] transition-colors hover:border-[#718575] hover:bg-white/60"
                   >
-                    Manage quizzes
+                    Browse questions
+                  </button>
+                </>
+              ) : (
+                <>
+                  <button
+                    onClick={goToQuizzes}
+                    className="rounded-lg bg-[#294537] px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#1e382a]"
+                  >
+                    Browse quizzes
+                  </button>
+                  <button
+                    onClick={goToAutoQuiz}
+                    className="rounded-lg border border-[#c9c8bc] px-5 py-3 text-sm font-semibold text-[#30483a] transition-colors hover:border-[#718575] hover:bg-white/60"
+                  >
+                    Make a quick quiz
                   </button>
                 </>
               )}
-            </>
-          )}
-        </div>
-
-        {session && (
-          <p className="text-xs text-gray-700 mb-2">
-            Welcome back, <span className="text-gray-500">{session.user?.name?.split(' ')[0]}</span> ·{' '}
-            <span className="capitalize">{role}</span> account
-          </p>
-        )}
-
-        <div className="mb-12 grid gap-4 sm:grid-cols-3">
-          {[
-            { value: '10x', label: 'Faster review loops' },
-            { value: '24/7', label: 'AI-generated practice' },
-            { value: '100%', label: 'Built for focus' },
-          ].map((stat) => (
-            <div key={stat.label} className="glass neon-amber rounded-2xl p-4 shadow-[0_0_30px_rgba(245,158,11,0.08)]">
-              <div className="text-2xl font-black text-white">{stat.value}</div>
-              <div className="mt-1 text-xs uppercase tracking-[0.18em] text-gray-400">{stat.label}</div>
             </div>
-          ))}
-        </div>
 
-        <div className="mb-16 rounded-3xl border border-white/10 bg-white/[0.02] p-6 sm:p-8">
-          <div className="mb-6 flex items-center justify-between gap-4">
-            <div>
-              <div className="badge border-amber-500/20 bg-amber-500/10 text-amber-300">How it works</div>
-            </div>
-            <div className="divider-glow w-24" />
+            {session && (
+              <p className="mt-5 text-xs text-[#798078]">
+                Welcome back{session.user?.name ? `, ${session.user.name.split(' ')[0]}` : ''}.
+                {role && <span className="capitalize"> You are signed in as {role}.</span>}
+              </p>
+            )}
           </div>
 
-          <div className="grid gap-4 md:grid-cols-3">
-            {[
-              { step: '01', title: 'Choose a topic', body: 'Start with a subject, chapter, or concept you need to master.' },
-              { step: '02', title: 'Practice actively', body: 'Turn theory into short quizzes, AI prompts, and instant feedback loops.' },
-              { step: '03', title: 'Track progress', body: 'Keep momentum with visual performance signals and role-based learning flows.' },
-            ].map((item) => (
-              <div key={item.step} className="rounded-2xl border border-white/8 bg-[#0b0b12] p-5 shadow-[0_0_0_1px_rgba(255,255,255,0.02)]">
-                <div className="mb-3 text-xs font-mono uppercase tracking-[0.25em] text-amber-400">{item.step}</div>
-                <h3 className="mb-2 text-lg font-bold text-white">{item.title}</h3>
-                <p className="text-sm leading-6 text-gray-400">{item.body}</p>
+          <motion.div
+            initial={shouldReduceMotion ? false : { opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: shouldReduceMotion ? 0 : 0.55, ease: [0.22, 1, 0.36, 1] }}
+            className="relative mx-auto w-full max-w-lg py-4 sm:py-8"
+          >
+            <div className="absolute inset-4 rotate-[-4deg] rounded-[1.75rem] border border-[#d8d2c6] bg-[#eae6dc]" />
+            <div className="relative rounded-[1.75rem] border border-[#d8d2c6] bg-[#efebe2] p-5 sm:p-8">
+              <div className="mb-5 flex items-center justify-between">
+                <div>
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#7d8179]">Practice, not cramming</p>
+                  <p className="mt-1 text-sm text-[#46584c]">A little progress adds up.</p>
+                </div>
+                <span className="rounded-full border border-[#d4d2c7] px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-[#64736a]">
+                  Sample
+                </span>
               </div>
-            ))}
+              <SampleQuestion />
+              <div className="mt-5 flex items-center gap-3 text-xs text-[#758077]">
+                <span className="h-2 w-2 rounded-full bg-[#bf6544]" />
+                Short rounds. Clear answers. Your own pace.
+              </div>
+            </div>
+          </motion.div>
+        </section>
+
+        <section className="border-t border-[#dcd8ce] pt-9">
+          <div className="mb-7 flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
+            <div>
+              <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#a15b40]">Find your next step</p>
+              <h2 className="mt-2 font-serif text-3xl font-medium tracking-tight text-[#20352b] sm:text-4xl">
+                A few ways to get started.
+              </h2>
+            </div>
+            <p className="max-w-sm text-sm leading-6 text-[#737b72]">
+              Choose a tool that fits the way you want to learn today.
+            </p>
           </div>
-        </div>
 
-        {/* Ticker */}
-        <Ticker />
-
-        {/* Features — intentionally staggered, not uniform grid */}
-        <div className="mb-14">
-          <div className="flex items-baseline gap-4 mb-6">
-            <h2 className="text-2xl font-black text-white">What's inside</h2>
-            <span className="text-xs font-mono text-gray-700">3 features</span>
-          </div>
-
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {FEATURES.map((f, i) => (
-              <motion.div
-                key={f.title}
-                className={`group relative isolate overflow-hidden rounded-xl border-l-2 ${f.accent} border-r border-t border-b border-white/5 bg-gray-900/60 p-5 transition-colors motion-reduce:transition-none hover:bg-gray-900 hover:border-r-white/10`}
-                initial={shouldReduceMotion ? false : { opacity: 0, y: 18 }}
+          <div className="grid gap-3 md:grid-cols-3">
+            {FEATURES.map((feature, index) => (
+              <motion.button
+                key={feature.number}
+                type="button"
+                onClick={() => router.push(feature.path)}
+                initial={shouldReduceMotion ? false : { opacity: 0, y: 12 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.35 }}
+                viewport={{ once: true, amount: 0.25 }}
                 transition={{
-                  duration: shouldReduceMotion ? 0 : 0.45,
-                  delay: shouldReduceMotion ? 0 : i * 0.12,
+                  duration: shouldReduceMotion ? 0 : 0.4,
+                  delay: shouldReduceMotion ? 0 : index * 0.08,
                   ease: [0.22, 1, 0.36, 1],
                 }}
-                whileHover={shouldReduceMotion ? undefined : { y: -6, scale: 1.015 }}
+                whileHover={shouldReduceMotion ? undefined : { y: -3 }}
+                className="group min-h-52 rounded-xl border border-[#dedbd1] bg-[#fbfaf6] p-5 text-left transition-colors hover:border-[#adb9a9] hover:bg-white motion-reduce:transition-none sm:p-6"
               >
-                <div className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-br from-white/[0.06] via-transparent to-amber-500/[0.04] opacity-0 transition-opacity duration-300 motion-reduce:transition-none group-hover:opacity-100" />
-                <div className="mb-3 inline-flex h-11 w-11 items-center justify-center rounded-xl border border-white/[0.07] bg-white/[0.04] text-2xl shadow-inner shadow-white/[0.03] transition-transform duration-300 motion-reduce:transition-none group-hover:rotate-[-4deg] group-hover:scale-110">
-                  {f.icon}
+                <div className="flex items-start justify-between">
+                  <span className="font-mono text-xs text-[#a15b40]">{feature.number}</span>
+                  <span className="text-[#8a938a] transition-transform group-hover:translate-x-1 group-hover:-translate-y-1 motion-reduce:transition-none" aria-hidden="true">↗</span>
                 </div>
-                <h3 className="mb-1.5 text-sm font-bold text-white">{f.title}</h3>
-                <p className="text-xs leading-relaxed text-gray-500">{f.body}</p>
-              </motion.div>
+                <h3 className="mt-8 font-serif text-2xl font-medium tracking-tight text-[#263b30]">{feature.title}</h3>
+                <p className="mt-2 max-w-xs text-sm leading-6 text-[#727a72]">{feature.body}</p>
+                <span className="mt-5 inline-block text-xs font-semibold text-[#42624e]">{feature.link}</span>
+              </motion.button>
             ))}
           </div>
-        </div>
+        </section>
 
-        {/* Bottom band — for guests only */}
-        {!session && (
-          <div className="rounded-2xl border border-white/5 bg-gradient-to-br from-amber-500/5 to-orange-500/5 p-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
-            <div>
-              <h3 className="text-xl font-black text-white mb-1">Ready to try it?</h3>
-              <p className="text-gray-600 text-sm">Free for students. No credit card. Just sign in.</p>
-            </div>
-            <button
-              onClick={() => signIn()}
-              className="shrink-0 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 px-8 py-3 font-bold text-gray-950 shadow-lg shadow-amber-500/20 transition-all hover:scale-105 text-sm"
-            >
-              Sign up free →
-            </button>
+        <section className="mt-10 flex flex-col justify-between gap-4 rounded-xl bg-[#e9e5da] px-5 py-5 sm:flex-row sm:items-center sm:px-7">
+          <div>
+            <p className="text-sm font-semibold text-[#2c4335]">Teaching with QuizzQuest?</p>
+            <p className="mt-1 text-sm text-[#727a72]">Create and manage questions from your teacher workspace.</p>
           </div>
-        )}
-
+          <button
+            onClick={() => router.push('/teacher/questions')}
+            className="self-start rounded-lg border border-[#bdc3b8] px-4 py-2.5 text-sm font-semibold text-[#30483a] transition-colors hover:border-[#7a907e] hover:bg-white/60 sm:self-auto"
+          >
+            Teacher tools <span aria-hidden="true">→</span>
+          </button>
+        </section>
       </main>
     </div>
   );
