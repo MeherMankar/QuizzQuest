@@ -189,6 +189,42 @@ export default function LandingPage() {
           </p>
         )}
 
+        <div className="mb-12 grid gap-4 sm:grid-cols-3">
+          {[
+            { value: '10x', label: 'Faster review loops' },
+            { value: '24/7', label: 'AI-generated practice' },
+            { value: '100%', label: 'Built for focus' },
+          ].map((stat) => (
+            <div key={stat.label} className="glass neon-amber rounded-2xl p-4 shadow-[0_0_30px_rgba(245,158,11,0.08)]">
+              <div className="text-2xl font-black text-white">{stat.value}</div>
+              <div className="mt-1 text-xs uppercase tracking-[0.18em] text-gray-400">{stat.label}</div>
+            </div>
+          ))}
+        </div>
+
+        <div className="mb-16 rounded-3xl border border-white/10 bg-white/[0.02] p-6 sm:p-8">
+          <div className="mb-6 flex items-center justify-between gap-4">
+            <div>
+              <div className="badge border-amber-500/20 bg-amber-500/10 text-amber-300">How it works</div>
+            </div>
+            <div className="divider-glow w-24" />
+          </div>
+
+          <div className="grid gap-4 md:grid-cols-3">
+            {[
+              { step: '01', title: 'Choose a topic', body: 'Start with a subject, chapter, or concept you need to master.' },
+              { step: '02', title: 'Practice actively', body: 'Turn theory into short quizzes, AI prompts, and instant feedback loops.' },
+              { step: '03', title: 'Track progress', body: 'Keep momentum with visual performance signals and role-based learning flows.' },
+            ].map((item) => (
+              <div key={item.step} className="rounded-2xl border border-white/8 bg-[#0b0b12] p-5 shadow-[0_0_0_1px_rgba(255,255,255,0.02)]">
+                <div className="mb-3 text-xs font-mono uppercase tracking-[0.25em] text-amber-400">{item.step}</div>
+                <h3 className="mb-2 text-lg font-bold text-white">{item.title}</h3>
+                <p className="text-sm leading-6 text-gray-400">{item.body}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
         {/* Ticker */}
         <Ticker />
 

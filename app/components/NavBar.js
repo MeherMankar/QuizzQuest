@@ -169,26 +169,43 @@ export default function NavBar() {
                         </nav>
 
                         {/* Profile / hamburger */}
-                        <button
-                            onClick={() => ToggleMenu()}
-                            className="flex items-center gap-2 rounded-xl p-1.5 transition-all hover:bg-white/5"
-                        >
-                            {userProfilePic ? (
-                                <div className="relative">
-                                    <img
-                                        src={userProfilePic}
-                                        alt="profile"
-                                        className="h-8 w-8 rounded-full ring-2 ring-amber-500 shadow-[0_0_12px_rgba(245,158,11,0.5)]"
-                                    />
-                                    <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-green-500 ring-2 ring-[#050508]" />
+                        <div className="flex items-center gap-3">
+                            {!session ? (
+                                <button
+                                    onClick={() => router.push('/auth/login')}
+                                    className="hidden rounded-full border border-amber-500/30 bg-amber-500/10 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.2em] text-amber-300 transition-all hover:border-amber-400/50 hover:bg-amber-500/20 sm:inline-flex"
+                                >
+                                    Sign in
+                                </button>
+                            ) : (
+                                <div className="hidden items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-2 py-1 sm:flex">
+                                    <span className="rounded-full bg-emerald-500/15 px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.18em] text-emerald-300">
+                                        {currentRole || 'student'}
+                                    </span>
                                 </div>
-                            ) : null}
-                            <div className={`flex h-7 w-7 items-center justify-center rounded-md transition-all ${
-                                isOpen ? 'bg-amber-500/20 text-amber-400 shadow-[0_0_10px_rgba(245,158,11,0.3)]' : 'text-gray-400 hover:text-gray-200'
-                            }`}>
-                                <FontAwesomeIcon icon={isOpen ? faTimes : faBars} className="h-4 w-4" />
-                            </div>
-                        </button>
+                            )}
+
+                            <button
+                                onClick={() => ToggleMenu()}
+                                className="flex items-center gap-2 rounded-xl p-1.5 transition-all hover:bg-white/5"
+                            >
+                                {userProfilePic ? (
+                                    <div className="relative">
+                                        <img
+                                            src={userProfilePic}
+                                            alt="profile"
+                                            className="h-8 w-8 rounded-full ring-2 ring-amber-500 shadow-[0_0_12px_rgba(245,158,11,0.5)]"
+                                        />
+                                        <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-green-500 ring-2 ring-[#050508]" />
+                                    </div>
+                                ) : null}
+                                <div className={`flex h-7 w-7 items-center justify-center rounded-md transition-all ${
+                                    isOpen ? 'bg-amber-500/20 text-amber-400 shadow-[0_0_10px_rgba(245,158,11,0.3)]' : 'text-gray-400 hover:text-gray-200'
+                                }`}>
+                                    <FontAwesomeIcon icon={isOpen ? faTimes : faBars} className="h-4 w-4" />
+                                </div>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </header>
