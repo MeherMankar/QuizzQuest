@@ -4,6 +4,7 @@ import "../global.css";
 import { useRouter } from 'next/navigation';
 import { signIn, useSession } from "next-auth/react";
 import { useState, useEffect } from 'react';
+import { motion, useReducedMotion } from 'framer-motion';
 
 const TICKER_ITEMS = [
   'AI-Powered Quizzes', 'Chess Arena',
@@ -49,6 +50,7 @@ const FEATURES = [
 export default function LandingPage() {
   const { data: session } = useSession();
   const router = useRouter();
+  const shouldReduceMotion = useReducedMotion();
   const [role, setRole] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -237,15 +239,26 @@ export default function LandingPage() {
 
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {FEATURES.map((f, i) => (
-              <div
+              <motion.div
                 key={f.title}
-                className={`group rounded-xl border-l-2 ${f.accent} border-r border-t border-b border-white/5 bg-gray-900/60 p-5 transition-all hover:bg-gray-900 hover:border-r-white/10`}
-                style={{ animationDelay: `${i * 0.05}s` }}
+                className={`group relative isolate overflow-hidden rounded-xl border-l-2 ${f.accent} border-r border-t border-b border-white/5 bg-gray-900/60 p-5 transition-colors motion-reduce:transition-none hover:bg-gray-900 hover:border-r-white/10`}
+                initial={shouldReduceMotion ? false : { opacity: 0, y: 18 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.35 }}
+                transition={{
+                  duration: shouldReduceMotion ? 0 : 0.45,
+                  delay: shouldReduceMotion ? 0 : i * 0.12,
+                  ease: [0.22, 1, 0.36, 1],
+                }}
+                whileHover={shouldReduceMotion ? undefined : { y: -6, scale: 1.015 }}
               >
-                <div className="text-2xl mb-3">{f.icon}</div>
-                <h3 className="font-bold text-white text-sm mb-1.5">{f.title}</h3>
-                <p className="text-xs text-gray-500 leading-relaxed">{f.body}</p>
-              </div>
+                <div className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-br from-white/[0.06] via-transparent to-amber-500/[0.04] opacity-0 transition-opacity duration-300 motion-reduce:transition-none group-hover:opacity-100" />
+                <div className="mb-3 inline-flex h-11 w-11 items-center justify-center rounded-xl border border-white/[0.07] bg-white/[0.04] text-2xl shadow-inner shadow-white/[0.03] transition-transform duration-300 motion-reduce:transition-none group-hover:rotate-[-4deg] group-hover:scale-110">
+                  {f.icon}
+                </div>
+                <h3 className="mb-1.5 text-sm font-bold text-white">{f.title}</h3>
+                <p className="text-xs leading-relaxed text-gray-500">{f.body}</p>
+              </motion.div>
             ))}
           </div>
         </div>
