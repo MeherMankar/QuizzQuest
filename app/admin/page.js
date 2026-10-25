@@ -14,18 +14,19 @@ export default function AdminLogin() {
     setError('');
 
     try {
-      const auth = Buffer.from(`${credentials.username}:${credentials.password}`).toString('base64');
-      const res = await fetch('/api/auth/users', {
+      const res = await fetch('/api/auth/admin/login', {
+        method: 'POST',
         headers: {
-          'Authorization': `Basic ${auth}`
-        }
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(credentials),
       });
 
       if (res.ok) {
-        localStorage.setItem('adminAuth', auth);
         router.push('/admin/dashboard');
       } else {
-        setError('Invalid credentials');
+        const body = await res.json().catch(() => ({}));
+        setError(body.error || 'Invalid credentials');
       }
     } catch (err) {
       setError('Login failed');

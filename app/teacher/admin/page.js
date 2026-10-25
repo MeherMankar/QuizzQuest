@@ -14,39 +14,40 @@ export default function AdminPanel() {
     setError('');
 
     try {
-      const auth = Buffer.from(`${credentials.username}:${credentials.password}`).toString('base64');
-      const res = await fetch('/api/auth/users', {
+      const res = await fetch('/api/auth/admin/login', {
+        method: 'POST',
         headers: {
-          'Authorization': `Basic ${auth}`
-        }
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(credentials),
       });
 
       if (res.ok) {
         setAuthenticated(true);
-        localStorage.setItem('adminAuth', auth);
-        fetchUsers(auth);
+        fetchUsers();
       } else {
-        setError('Invalid credentials');
+        const body = await res.json().catch(() => ({}));
+        setError(body.error || 'Invalid credentials');
       }
     } catch (err) {
       setError('Login failed');
     }
   };
 
-  const fetchUsers = async (auth) => {
+  const fetchUsers = async () => {
     try {
-      const res = await fetch('/api/auth/users', {
-        headers: {
-          'Authorization': `Basic ${auth || localStorage.getItem('adminAuth')}`
-        }
-      });
+      const res = await fetch('/api/auth/users', { cache: 'no-store' });
 
       if (res.ok) {
         const data = await res.json();
-        setUsers(data.users);
+        setUsers(data.users || []);
+        setAuthenticated(true);
+      } else {
+        setAuthenticated(false);
       }
     } catch (err) {
       console.error('Failed to fetch users:', err);
+      setAuthenticated(false);
     } finally {
       setLoading(false);
     }
@@ -54,18 +55,16 @@ export default function AdminPanel() {
 
   const updateRole = async (email, newRole) => {
     try {
-      const auth = localStorage.getItem('adminAuth');
       const res = await fetch('/api/auth/users', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Basic ${auth}`
         },
-        body: JSON.stringify({ email, role: newRole })
+        body: JSON.stringify({ email, role: newRole }),
       });
 
       if (res.ok) {
-        fetchUsers(auth);
+        fetchUsers();
       }
     } catch (err) {
       console.error('Failed to update role:', err);
@@ -73,13 +72,7 @@ export default function AdminPanel() {
   };
 
   useEffect(() => {
-    const auth = localStorage.getItem('adminAuth');
-    if (auth) {
-      setAuthenticated(true);
-      fetchUsers(auth);
-    } else {
-      setLoading(false);
-    }
+    fetchUsers();
   }, []);
 
   if (!authenticated) {
@@ -133,8 +126,8 @@ export default function AdminPanel() {
           <div className="flex justify-between items-center mb-8">
             <h1 className="text-3xl font-bold text-amber-400">Admin Panel - User Management</h1>
             <button
-              onClick={() => {
-                localStorage.removeItem('adminAuth');
+              onClick={async () => {
+                await fetch('/api/auth/admin/login', { method: 'DELETE' });
                 setAuthenticated(false);
               }}
               className="px-4 py-2 bg-red-600 hover:bg-red-500 text-white rounded-lg"

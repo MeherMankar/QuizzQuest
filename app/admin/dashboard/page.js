@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { LoadingSpinner, TableSkeleton } from '../../components/LoadingComponents';
+import { LoadingSpinner } from '../../components/LoadingComponents';
 
 export default function AdminDashboard() {
   const router = useRouter();
@@ -10,17 +10,13 @@ export default function AdminDashboard() {
   const [authenticated, setAuthenticated] = useState(false);
   const [updating, setUpdating] = useState(null);
 
-  const fetchUsers = async (auth) => {
+  const fetchUsers = async () => {
     try {
-      const res = await fetch('/api/auth/users', {
-        headers: {
-          'Authorization': `Basic ${auth}`
-        }
-      });
+      const res = await fetch('/api/auth/users', { cache: 'no-store' });
 
       if (res.ok) {
         const data = await res.json();
-        setUsers(data.users);
+        setUsers(data.users || []);
         setAuthenticated(true);
       } else {
         router.push('/admin');
@@ -36,18 +32,16 @@ export default function AdminDashboard() {
   const updateRole = async (email, newRole) => {
     setUpdating(email);
     try {
-      const auth = localStorage.getItem('adminAuth');
       const res = await fetch('/api/auth/users', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Basic ${auth}`
         },
-        body: JSON.stringify({ email, role: newRole })
+        body: JSON.stringify({ email, role: newRole }),
       });
 
       if (res.ok) {
-        await fetchUsers(auth);
+        await fetchUsers();
       }
     } catch (err) {
       console.error('Failed to update role:', err);
@@ -56,18 +50,17 @@ export default function AdminDashboard() {
     }
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem('adminAuth');
+  const handleLogout = async () => {
+    try {
+      await fetch('/api/auth/admin/login', { method: 'DELETE' });
+    } catch {
+      // ignore cleanup failures and redirect to login
+    }
     router.push('/admin');
   };
 
   useEffect(() => {
-    const auth = localStorage.getItem('adminAuth');
-    if (auth) {
-      fetchUsers(auth);
-    } else {
-      router.push('/admin');
-    }
+    fetchUsers();
   }, [router]);
 
   if (loading) {

@@ -4,7 +4,7 @@ const next = require('next');
 const { initializeSocketIO } = require('./app/api/socket/route'); // Adjust path if needed
 
 const dev = process.env.NODE_ENV !== 'production';
-const hostname = 'localhost';
+const hostname = process.env.HOSTNAME || '0.0.0.0';
 const port = process.env.PORT || 3000;
 
 // Create the Next.js app
